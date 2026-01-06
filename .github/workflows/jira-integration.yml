@@ -1,0 +1,32 @@
+name: Jira Integration
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  update-jira:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Jira 로그인
+      - name: Login to Jira
+        uses: atlassian/gajira-login@v3
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+
+      # 2. 커밋 메시지에서 이슈 키 추출 (예: "PROJ-123 fix bug")
+      - name: Find Issue Key
+        id: find
+        uses: atlassian/gajira-find-issue-key@v3
+        with:
+          from: commit-message
+
+      # 3. Jira 이슈에 댓글 남기기
+      - name: Comment on Jira
+        if: steps.find.outputs.issue != ''
+        uses: atlassian/gajira-comment@v3
+        with:
+          issue: ${{ steps.find.outputs.issue }}
+          comment: "GitHub Actions를 통해 배포가 완료되었습니다."
