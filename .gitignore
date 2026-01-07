@@ -1,0 +1,15 @@
+### IDE ###
+.idea/
+.vscode/
+*.swp
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+### OS ###
+.DS_Store
+.DS_Store?
+
+### Logs ###
+*.log

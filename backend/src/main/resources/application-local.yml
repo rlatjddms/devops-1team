@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: Spicy DevOps
+  datasource:
+    url: jdbc:mysql://localhost:3306/spicy
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: spicy
+    password: spicy
+  jpa:
+    properties:
+      hibernate:
+        highlight_sql: true
+        format-sql: true
+        use_sql_comments: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: trace
