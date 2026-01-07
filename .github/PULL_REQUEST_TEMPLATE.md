@@ -1,49 +1,29 @@
-name: '🚀 이슈 생성'
-description: '새로운 기능, 버그 수정, 리팩토링 등을 위한 이슈를 생성합니다.'
-title: '[Label] 이슈 제목을 입력해주세요'
-labels: []
-body:
-  - type: dropdown
-    id: label
-    attributes:
-      label: '🏷️ 이슈 종류 (Label)'
-      description: '이슈에 가장 적합한 라벨을 하나 선택해주세요.'
-      options:
-        - 'feat: 새로운 기능 추가'
-        - 'fix: 버그 수정'
-        - 'refactor: 코드 리팩토링'
-        - 'docs: 문서 작업'
-        - 'chore: 빌드, 설정 등 기타 작업'
-    validations:
-      required: true
+## 🔗 연관된 이슈
+> 이슈 번호를 작성해주세요. (예: Closes #123)
+- Closes #
 
-  - type: textarea
-    id: description
-    attributes:
-      label: '📝 상세 내용 (Description)'
-      description: '이슈에 대한 구체적인 설명을 작성해주세요. (배경, 목적 등)'
-      placeholder: '예: 현재 OO 기능은 사용자가 XX할 때 불편함이 있어, 이를 개선하고자 합니다.'
-    validations:
-      required: true
+## 📝 작업 내용
+> 이번 PR에서 작업한 내용을 간략히 설명해주세요.
+- [ ] 로그인 API 구현
+- [ ] JWT 토큰 발급 로직 추가
+- [ ] 테스트 코드 작성
 
-  - type: textarea
-    id: tasks
-    attributes:
-      label: '✅ 체크리스트 (Tasks)'
-      description: '이 이슈를 완료하기 위해 필요한 작업 목록을 구체적으로 작성해주세요.'
-      value: |
-        - [ ] OO 기능 설계
-        - [ ] OO 기능 UI 개발
-        - [ ] OO 기능 API 개발
-        - [ ] 테스트 코드 작성
-    validations:
-      required: true
+## 📸 스크린샷 (선택)
+> UI 변경 사항이나 테스트 결과 화면이 있다면 첨부해주세요.
+<img width="500" alt="스크린샷" src="">
 
-  - type: textarea
-    id: etc
-    attributes:
-      label: '📎 참고 자료 (References)'
-      description: '관련된 다른 이슈, 외부 링크, 스크린샷 등을 첨부해주세요.'
-      placeholder: |
-        - 관련된 이슈: #123
-        - 참고 링크: https://...
+## ✅ 테스트 결과
+> 수행한 테스트와 결과를 요약해주세요. (예: 단위 테스트 전체 통과)
+- [ ] 단위 테스트 (JUnit)
+- [ ] 통합 테스트
+
+## 💬 리뷰 요구사항 (선택)
+> 리뷰어가 특별히 봐주었으면 하는 부분이 있다면 작성해주세요.
+- `AuthService`의 토큰 갱신 로직이 적절한지 봐주세요.
+
+---
+### ✅ 변경 사항 체크리스트
+- [ ] 커밋 메시지 컨벤션을 준수했나요?
+- [ ] 불필요한 공백이나 주석을 제거했나요?
+- [ ] 코드에 영향이 있는 부분에 대해 테스트를 작성했나요?
+- [ ] 모든 테스트가 성공했나요?
