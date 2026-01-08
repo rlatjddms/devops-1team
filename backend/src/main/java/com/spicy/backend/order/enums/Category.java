@@ -10,10 +10,10 @@ public enum Category {
     FRESH_FOOD("신선 식품"),
 
     // 가공 식품
-    PROCESSED_FOOD(""),
+    PROCESSED_FOOD("가공 식품"),
 
     // 냉동 식품
-    FROZEN_FOOD(""),
+    FROZEN_FOOD("냉동 식품"),
 
     // 식기/용기
     GOODS("비품/용기"),
