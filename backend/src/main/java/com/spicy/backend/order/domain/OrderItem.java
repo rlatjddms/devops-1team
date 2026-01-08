@@ -23,11 +23,11 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // fk: 주문 번호
+    // fk: 주문 식별 번호
     @Column(nullable = false)
     private Long orderId;
 
-    // fk: 상품 번호
+    // fk: 상품 식별 번호
     @Column(nullable = false)
     private Long productId;
 
