@@ -64,7 +64,7 @@ public class Product {
     @Column(nullable = false)
     private LocalDate expirationDate;
 
-    // 안전 재고 수량
+    // 안전 재고 수량 -> 가맹점 기준
     @Column(nullable = false)
     private Integer safetyStock;
 
