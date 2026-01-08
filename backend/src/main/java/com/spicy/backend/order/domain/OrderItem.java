@@ -1,7 +1,5 @@
 package com.spicy.backend.order.domain;
 
-import com.spicy.backend.global.entity.BaseEntity;
-import com.spicy.backend.order.enums.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,53 +12,38 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class Order extends BaseEntity {
+public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 주문번호
-    @Column(nullable = false, unique = true)
-    private String orderNumber;
-
-    // 가맹점 pk
+    // fk: 주문 번호
     @Column(nullable = false)
-    private Long storeId;
+    private Long orderId;
 
-    // 총 주문 금액
+    // fk: 상품 번호
     @Column(nullable = false)
-    private BigDecimal totalAmount;
+    private Long productId;
 
-    // 주문 상태
+    // 상품 이름
     @Column(nullable = false)
-    private Status status;
+    private String productName;
 
-    // 희망 배송일
+    // 주문 수량
     @Column(nullable = false)
-    private LocalDate deliveryDate;
+    private Integer quantity;
 
-    // 주소
+    // 개별 단가
     @Column(nullable = false)
-    private String address;
+    private BigDecimal unitPrice;
 
-    // 수령인 이름
+    // 총 금액
     @Column(nullable = false)
-    private String receiverName;
-
-    // 수령인 연락처
-    @Column(nullable = false)
-    private String receiverPhone;
-
-    // 배송 요청사항
-    @Column(nullable = false)
-    private String memo;
-
-    // 주문 일시 - createdAt
+    private BigDecimal totalPrice;
 }
