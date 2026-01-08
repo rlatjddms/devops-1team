@@ -25,7 +25,7 @@ import java.time.LocalDate;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long productId;
 
     // 상품 코드
     @Column(nullable = false)
