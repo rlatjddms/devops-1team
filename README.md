@@ -169,7 +169,7 @@ branch를 생성하기 전 issue를 먼저 작성합니다. issue 작성 후 생
 
 ### 5. Etc
 
-- `feat/#7-order-fresh`, `feat/#5-purchase-auto-logic`
+- `feat/DEV-7-order-fresh`, `feat/DEV-5-purchase-auto-logic`
 
 
 </div>
