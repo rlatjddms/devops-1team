@@ -1,8 +1,11 @@
+server:
+  port: 8000
+
 spring:
   application:
     name: Spicy DevOps
   datasource:
-    url: jdbc:mariadb://localhost:3306/spicy
+    url: jdbc:mariadb://localhost:3307/spicy
     driver-class-name: org.mariadb.jdbc.Driver
     username: spicy
     password: spicy
