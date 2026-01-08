@@ -30,7 +30,7 @@ public class Order extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String orderNumber;
 
-    // 가맹점 pk
+    // fk: 가맹점 식별 번호
     @Column(nullable = false)
     private Long storeId;
 
