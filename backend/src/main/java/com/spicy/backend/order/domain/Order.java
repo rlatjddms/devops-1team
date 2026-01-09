@@ -4,9 +4,12 @@ import com.spicy.backend.global.entity.BaseEntity;
 import com.spicy.backend.order.enums.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +22,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Builder
+@Table(name = "orders")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends BaseEntity {
@@ -40,6 +44,7 @@ public class Order extends BaseEntity {
 
     // 주문 상태
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     // 희망 배송일
