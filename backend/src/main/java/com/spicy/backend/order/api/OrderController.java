@@ -34,7 +34,6 @@ public class OrderController {
             @PathVariable("user-id") Long userId,   // 가맹점주
             @RequestBody OrderCreateRequest request
     ) {
-        userId = 1L;
 
         return null;
     }
@@ -46,7 +45,6 @@ public class OrderController {
             @PathVariable("user-id") Long userId,   // 가맹점주
             @PathVariable Status status
     ) {
-        userId = 1L;
 
         return null;
     }
@@ -58,7 +56,6 @@ public class OrderController {
             @PathVariable("user-id") Long userId,   // 가맹점주
             @RequestBody OrderCancelRequest request
     ) {
-        userId = 1L;
 
         return null;
     }

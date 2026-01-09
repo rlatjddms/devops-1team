@@ -28,7 +28,6 @@ public class CartItemController {
     public ResponseEntity<ApiResponse<List<CartItemResponse>>> getCartItems(
             @PathVariable("user-id") Long userId    // 가맹점주
     ) {
-        userId = 1L;
 
         return null;
     }
@@ -39,7 +38,6 @@ public class CartItemController {
     public ResponseEntity<ApiResponse<OrderResponse>> deleteCartItems(
             @PathVariable("user-id") Long userId    // 가맹점주
     ) {
-        userId = 1L;
 
         return null;
     }
