@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Settlement", description = "정산 API (일별/월별 조회")
+@Tag(name = "Settlement", description = "정산 API (일별/월별 조회)")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/settlements")
