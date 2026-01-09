@@ -28,18 +28,23 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 로그인 아이디
     @Column(nullable = false, unique = true)
     private String loginId;
 
+    // 비밀번호
     @Column(nullable = false)
     private String password;
 
+    // 회원 이름
     @Column(nullable = false)
     private String username;
 
+    // 회원 이메일
     @Column(nullable = false)
     private String email;
 
+    // 회원 종류 - HQ(본사 관리자), FRANCHISE(가맹점 관리자)
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
