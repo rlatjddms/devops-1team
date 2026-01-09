@@ -41,7 +41,7 @@ public class OrderService {
         Order order = Order.create(request.orderCreateRequest());
 
         // orderId 받아오기 위해 먼저 저장
-        orderRepository.save(order);
+        order = orderRepository.save(order);
 
         // OrderItem 생성
         List<OrderItem> itemList = new ArrayList<>();
