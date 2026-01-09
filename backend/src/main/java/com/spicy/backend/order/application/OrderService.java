@@ -9,8 +9,10 @@ import com.spicy.backend.order.dto.request.OrderItemRequest;
 import com.spicy.backend.order.dto.request.wrapper.OrderAndOrderItemRequest;
 import com.spicy.backend.order.dto.response.OrderCreateResponse;
 import com.spicy.backend.global.error.exception.BusinessException;
+import com.spicy.backend.order.dto.response.OrderItemResponse;
 import com.spicy.backend.order.dto.response.OrderResponse;
 import com.spicy.backend.order.enums.Status;
+import com.spicy.backend.order.error.OrderErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,5 +74,15 @@ public class OrderService {
 
         // 리스트 반환
         return OrderResponse.from(orders);
+    }
+
+    public List<OrderItemResponse> getOrderDetails(Long storeId, Long orderId) {
+        // storeId, orderId로 OrderItem 리스트 조회
+        // 리스트 길이가 0일 때 예외 발생
+        List<OrderItem> itemList = orderItemRepository.findAllByStoreIdAndOrderId(storeId, orderId);
+        if (itemList.isEmpty()) throw new BusinessException(OrderErrorCode.ORDER_ITEM_NOT_FOUND);
+
+        // OrderItem 리스트를 OrderItemResponse 리스트로 변환 후 반환
+        return OrderItemResponse.from(itemList);
     }
 }

@@ -50,9 +50,12 @@ public class OrderController {
 
     // 주문 상세 조회
     @Operation(summary = "주문 상세 조회", description = "해당 주문의 상세 정보 조회")
-    @GetMapping("/details")
-    public ResponseEntity<ApiResponse<List<OrderItemResponse>>> getOrderDetails() {
-        return null;
+    @GetMapping("/{store-id}/{order-id}/details")
+    public ResponseEntity<ApiResponse<List<OrderItemResponse>>> getOrderDetails(
+            @PathVariable("store-id") Long storeId,
+            @PathVariable("order-id") Long orderId
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(orderService.getOrderDetails(storeId, orderId)));
     }
 
     // 주문 취소
