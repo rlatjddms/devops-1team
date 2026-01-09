@@ -9,6 +9,8 @@ import com.spicy.backend.order.dto.request.OrderItemRequest;
 import com.spicy.backend.order.dto.request.wrapper.OrderAndOrderItemRequest;
 import com.spicy.backend.order.dto.response.OrderCreateResponse;
 import com.spicy.backend.global.error.exception.BusinessException;
+import com.spicy.backend.order.dto.response.OrderResponse;
+import com.spicy.backend.order.enums.Status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,4 +66,11 @@ public class OrderService {
     }
 
 
+    public List<OrderResponse> getAllOrders(Long storeId, Status status) {
+        // status에 따라 주문 리스트 조회
+        List<Order> orders = orderRepository.findAllByStoreIdAndStatusOrderByCreatedAt(storeId, status);
+
+        // 리스트 반환
+        return OrderResponse.from(orders);
+    }
 }

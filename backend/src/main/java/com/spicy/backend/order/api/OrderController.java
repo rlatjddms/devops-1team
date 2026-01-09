@@ -5,6 +5,7 @@ import com.spicy.backend.order.application.OrderService;
 import com.spicy.backend.order.dto.request.OrderCancelRequest;
 import com.spicy.backend.order.dto.request.wrapper.OrderAndOrderItemRequest;
 import com.spicy.backend.order.dto.response.OrderCreateResponse;
+import com.spicy.backend.order.dto.response.OrderItemResponse;
 import com.spicy.backend.order.dto.response.OrderResponse;
 import com.spicy.backend.order.enums.Status;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,12 +40,12 @@ public class OrderController {
 
     // 주문 조회
     @Operation(summary = "주문 조회", description = "가맹점주의 요청에 따라 전체, 완료, 취소된 주문 조회")
-    @GetMapping("/{status}/{user-id}")
-    public ResponseEntity<ApiResponse<OrderResponse>> getOrders(
-            @PathVariable("user-id") Long userId,   // 가맹점주
+    @GetMapping("/{status}/{store-id}")
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> getOrders(
+            @PathVariable("store-id") Long storeId,   // 가맹점 식별 번호
             @PathVariable Status status
     ) {
-        return ResponseEntity.ok(ApiResponse.success(orderService.getAllOrders(userId, status)));
+        return ResponseEntity.ok(ApiResponse.success(orderService.getAllOrders(storeId, status)));
     }
 
     // 주문 상세 조회
