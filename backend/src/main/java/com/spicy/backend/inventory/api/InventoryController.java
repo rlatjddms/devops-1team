@@ -1,0 +1,64 @@
+package com.spicy.backend.inventory.api;
+
+import com.spicy.backend.global.common.ApiResponse;
+import com.spicy.backend.inventory.application.InventoryService;
+import com.spicy.backend.inventory.dto.request.InventoryRequest;
+import com.spicy.backend.inventory.dto.response.ProductResponse;
+import com.spicy.backend.inventory.dto.response.ProductSummaryResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/inventory")
+public class InventoryController {
+    private final InventoryService inventoryService;
+
+    @Operation(summary = "전체 상품 조회", description = "모든 상품에 대한 정보 조회")
+    @GetMapping
+    public ResponseEntity<ApiResponse<ProductResponse>> getAllProduct(){
+        return null;
+    }
+
+    @Operation(summary = "상품 id로 상품 조회", description = "id로 상품에 대한 정보 조회")
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProductSummaryResponse>> searchProduct(
+            @PathVariable long id
+    ){
+        return null;
+    }
+
+    @Operation(summary = "상품 이름으로 상품 조회", description = "상품 이름으로 상품에 대한 정보 조회")
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<ProductSummaryResponse>> searchByName(
+            @RequestParam String name
+    ) {
+        return null;
+    }
+
+    @PostMapping("/inbound")
+    @Operation(summary = "재고 입고",description = "상품에 재고를 입고한다")
+    public ResponseEntity<ApiResponse<Void>> inbound(
+            @RequestBody InventoryRequest inventoryRequest
+    ){
+        return null;
+    }
+
+    @PostMapping("/outbound")
+    @Operation(summary = "재고 차감", description = "상품의 재고를 차감한다")
+    public ResponseEntity<ApiResponse<Void>> outbound(
+            @RequestBody InventoryRequest inventoryRequest
+    ){
+        return null;
+    }
+
+
+}
