@@ -56,7 +56,7 @@ public class InventoryController {
     @PostMapping("/outbound")
     @Operation(summary = "재고 차감", description = "상품의 재고를 차감한다")
     public ResponseEntity<ApiResponse<Void>> outbound(
-            @RequestBody InventoryRequest inventoryRequest
+            @Valid @RequestBody InventoryRequest inventoryRequest
     ){
         return null;
     }
