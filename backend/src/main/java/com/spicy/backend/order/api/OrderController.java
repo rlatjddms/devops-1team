@@ -44,7 +44,13 @@ public class OrderController {
             @PathVariable("user-id") Long userId,   // 가맹점주
             @PathVariable Status status
     ) {
+        return ResponseEntity.ok(ApiResponse.success(orderService.getAllOrders(userId, status)));
+    }
 
+    // 주문 상세 조회
+    @Operation(summary = "주문 상세 조회", description = "해당 주문의 상세 정보 조회")
+    @GetMapping("/details")
+    public ResponseEntity<ApiResponse<List<OrderItemResponse>>> getOrderDetails() {
         return null;
     }
 
