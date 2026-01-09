@@ -6,6 +6,7 @@ import com.spicy.backend.inventory.dto.request.InventoryRequest;
 import com.spicy.backend.inventory.dto.response.ProductResponse;
 import com.spicy.backend.inventory.dto.response.ProductSummaryResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ public class InventoryController {
     @Operation(summary = "상품 id로 상품 조회", description = "id로 상품에 대한 정보 조회")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ProductSummaryResponse>> searchProduct(
-            @PathVariable long id
+            @PathVariable Long id
     ){
         return null;
     }
@@ -47,7 +48,7 @@ public class InventoryController {
     @PostMapping("/inbound")
     @Operation(summary = "재고 입고",description = "상품에 재고를 입고한다")
     public ResponseEntity<ApiResponse<Void>> inbound(
-            @RequestBody InventoryRequest inventoryRequest
+            @Valid @RequestBody InventoryRequest inventoryRequest
     ){
         return null;
     }
