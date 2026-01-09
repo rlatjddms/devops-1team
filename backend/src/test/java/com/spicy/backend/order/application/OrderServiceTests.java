@@ -3,10 +3,12 @@ package com.spicy.backend.order.application;
 import com.spicy.backend.order.dao.OrderItemRepository;
 import com.spicy.backend.order.dao.OrderRepository;
 import com.spicy.backend.order.domain.Order;
+import com.spicy.backend.order.domain.OrderItem;
 import com.spicy.backend.order.dto.request.OrderCreateRequest;
 import com.spicy.backend.order.dto.request.OrderItemRequest;
 import com.spicy.backend.order.dto.request.wrapper.OrderAndOrderItemRequest;
 import com.spicy.backend.order.dto.response.OrderCreateResponse;
+import com.spicy.backend.order.dto.response.OrderItemResponse;
 import com.spicy.backend.order.dto.response.OrderResponse;
 import com.spicy.backend.order.enums.Status;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,10 +45,12 @@ class OrderServiceTests {
     private Long orderId;
     private Long storeId;
     private Long productId;
+    private Long orderItemId;
 
     private Integer quantity;
 
     private BigDecimal unitPrice;
+    private BigDecimal totalPrice;
 
     private Order order;
     private OrderAndOrderItemRequest orderAndOrderItemRequest;
@@ -55,16 +59,20 @@ class OrderServiceTests {
     private List<OrderItemRequest> orderItemRequestList;
     private List<Order> orderList;
 
+    private OrderItem orderItem;
+
     @BeforeEach
     void setUp() {
         userId = 1L;
         orderId = 10L;
         storeId = 100L;
         productId = 1000L;
+        orderItemId = 20L;
 
         quantity = 10;
 
         unitPrice = BigDecimal.valueOf(100.00);
+        totalPrice = unitPrice.multiply(BigDecimal.valueOf(quantity));
 
         order = Order.builder()
                 .orderNumber("orderNumber")
@@ -79,6 +87,16 @@ class OrderServiceTests {
         ReflectionTestUtils.setField(order, "id", orderId);
 
         orderList = List.of(order);
+
+        orderItem = OrderItem.builder()
+                .orderId(orderId)
+                .productName("productName")
+                .productId(productId)
+                .quantity(quantity)
+                .unitPrice(unitPrice)
+                .totalPrice(unitPrice.multiply(BigDecimal.valueOf(quantity)))
+                .build();
+        ReflectionTestUtils.setField(orderItem, "id", orderItemId);
     }
 
     @Test
@@ -144,5 +162,22 @@ class OrderServiceTests {
         assertEquals(orderId, response.get(0).orderId());
 
         verify(orderRepository, times(1)).findAllByStoreIdAndStatusOrderByCreatedAt(storeId, Status.PENDING);
+    }
+
+
+    @Test
+    @DisplayName("주문 정보 상세 조회 - 성공")
+    void getOrderDetails_Success() {
+        // given
+        given(orderItemRepository.findAllByStoreIdAndOrderId(storeId, orderId)).willReturn(List.of(orderItem));
+
+        // when
+        List<OrderItemResponse> response = orderService.getOrderDetails(storeId, orderId);
+
+        // then
+        assertEquals("productName",  response.get(0).productName());
+        assertEquals(quantity, response.get(0).quantity());
+        assertEquals(unitPrice, response.get(0).unitPrice());
+        assertEquals(totalPrice, response.get(0).totalPrice());
     }
 }
