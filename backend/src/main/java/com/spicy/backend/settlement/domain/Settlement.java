@@ -13,6 +13,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,21 +53,25 @@ public class Settlement extends BaseEntity {
 
     // 주문 건수
     @Column(nullable = false)
+    @NotNull
     @Min(1)
     private Integer orderCount;
 
     // 주문 금액 합계
     @Column(nullable = false, precision = 15, scale = 2)
+    @NotNull
     @DecimalMin(value = "0.0", inclusive = false)
     private BigDecimal totalOrderAmount;
 
     // 수수료 금액 (본사 수익)
     @Column(nullable = false, precision = 15, scale = 2)
+    @NotNull
     @DecimalMin(value = "0.0", inclusive = false)
     private BigDecimal commissionAmount;
 
     // 최종 정산 금액
     @Column(nullable = false, precision = 15, scale = 2)
+    @NotNull
     @DecimalMin(value = "0.0", inclusive = false)
     private BigDecimal settlementAmount;
 
@@ -75,6 +80,7 @@ public class Settlement extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @NotNull
     private SettlementStatus status;
 
 }
