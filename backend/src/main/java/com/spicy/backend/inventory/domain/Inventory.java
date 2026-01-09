@@ -38,4 +38,19 @@ public class Inventory extends BaseEntity {
     @Column(nullable = false)
     private LotStatus status;
 
+    //상품이름
+    @Column(nullable = false)
+    private String productName;
+
+    //상품 일련번호
+    @Column(nullable = false)
+    private String productCode;
+
+    //상품 가격
+    @Column(nullable = false)
+    private int price;
+
+    //상품 설명
+    @Column(nullable = false)
+    private String description;
 }
