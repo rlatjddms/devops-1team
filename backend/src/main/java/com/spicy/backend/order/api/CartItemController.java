@@ -3,7 +3,6 @@ package com.spicy.backend.order.api;
 import com.spicy.backend.global.common.ApiResponse;
 import com.spicy.backend.order.application.CartItemService;
 import com.spicy.backend.order.dto.response.CartItemResponse;
-import com.spicy.backend.order.dto.response.OrderResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -35,10 +34,10 @@ public class CartItemController {
     // 장바구니에서 상품 삭제
     @Operation(summary = "장바구니 상품 삭제", description = "장바구니에서 선택한 상품들 삭제")
     @DeleteMapping("/{user-id}")
-    public ResponseEntity<ApiResponse<OrderResponse>> deleteCartItems(
+    public ResponseEntity<ApiResponse<String>> deleteCartItems(
             @PathVariable("user-id") Long userId    // 가맹점주
     ) {
 
-        return null;
+        return ResponseEntity.ok(ApiResponse.success("삭제 완료"));
     }
 }
