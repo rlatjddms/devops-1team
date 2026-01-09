@@ -7,6 +7,10 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public record OrderItemRequest(
+        // 상품 식별 번호
+        @NotNull
+        Long productId,
+
         // 상품 이름
         @NotBlank
         String productName,

@@ -1,5 +1,8 @@
 package com.spicy.backend.order.domain;
 
+import com.spicy.backend.global.error.errorcode.GlobalErrorCode;
+import com.spicy.backend.global.error.exception.BusinessException;
+import com.spicy.backend.order.dto.request.OrderItemRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -46,4 +49,23 @@ public class OrderItem {
     // 총 금액
     @Column(nullable = false)
     private BigDecimal totalPrice;
+
+    public static OrderItem create(OrderItemRequest request) {
+        return OrderItem.builder()
+                .productId(request.productId())
+                .productName(request.productName())
+                .quantity(request.quantity())
+                .unitPrice(request.unitPrice())
+                .totalPrice(request.unitPrice().multiply(BigDecimal.valueOf(request.quantity())))
+                .build();
+    }
+
+    public OrderItem updateOrderId(Long id) {
+        if (id == null && id == 0) {
+            throw new BusinessException(GlobalErrorCode.INVALID_INPUT_VALUE);
+        }
+        this.orderId = id;
+
+        return this;
+    }
 }

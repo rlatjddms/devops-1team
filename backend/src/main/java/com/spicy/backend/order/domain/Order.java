@@ -1,7 +1,9 @@
 package com.spicy.backend.order.domain;
 
 import com.spicy.backend.global.entity.BaseEntity;
+import com.spicy.backend.order.dto.request.OrderCreateRequest;
 import com.spicy.backend.order.enums.Status;
+import com.spicy.backend.order.util.OrderNumberGenerator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -68,4 +70,22 @@ public class Order extends BaseEntity {
     private String memo;
 
     // 주문 일시 - createdAt
+
+    public void update(BigDecimal totalPrice) {
+        this.totalAmount = totalPrice;
+    }
+
+    public static Order create(OrderCreateRequest request) {
+        return Order.builder()
+                .storeId(request.storeId())
+                .deliveryDate(request.deliveryDate())
+                .address(request.address())
+                .receiverName(request.receiverName())
+                .receiverPhone(request.receiverPhone())
+                .memo(request.memo())
+                .status(Status.PENDING)
+                .orderNumber(OrderNumberGenerator.generate())
+                .totalAmount(BigDecimal.ZERO)
+                .build();
+    }
 }

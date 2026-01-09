@@ -3,7 +3,7 @@ package com.spicy.backend.order.api;
 import com.spicy.backend.global.common.ApiResponse;
 import com.spicy.backend.order.application.OrderService;
 import com.spicy.backend.order.dto.request.OrderCancelRequest;
-import com.spicy.backend.order.dto.request.OrderCreateRequest;
+import com.spicy.backend.order.dto.request.wrapper.OrderAndOrderItemRequest;
 import com.spicy.backend.order.dto.response.OrderCreateResponse;
 import com.spicy.backend.order.dto.response.OrderResponse;
 import com.spicy.backend.order.enums.Status;
@@ -32,10 +32,9 @@ public class OrderController {
     @PostMapping("/{user-id}")
     public ResponseEntity<ApiResponse<OrderCreateResponse>> createOrder(
             @PathVariable("user-id") Long userId,   // 가맹점주
-            @RequestBody OrderCreateRequest request
+            @RequestBody OrderAndOrderItemRequest request
     ) {
-
-        return null;
+        return ResponseEntity.ok(ApiResponse.success(orderService.createOrder(userId, request)));
     }
 
     // 주문 조회
