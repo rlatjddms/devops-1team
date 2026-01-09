@@ -1,5 +1,6 @@
 package com.spicy.backend.order.application;
 
+import com.spicy.backend.global.error.exception.BusinessException;
 import com.spicy.backend.order.dao.OrderItemRepository;
 import com.spicy.backend.order.dao.OrderRepository;
 import com.spicy.backend.order.domain.Order;
@@ -11,6 +12,7 @@ import com.spicy.backend.order.dto.response.OrderCreateResponse;
 import com.spicy.backend.order.dto.response.OrderItemResponse;
 import com.spicy.backend.order.dto.response.OrderResponse;
 import com.spicy.backend.order.enums.Status;
+import com.spicy.backend.order.error.OrderErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
@@ -179,5 +182,17 @@ class OrderServiceTests {
         assertEquals(quantity, response.get(0).quantity());
         assertEquals(unitPrice, response.get(0).unitPrice());
         assertEquals(totalPrice, response.get(0).totalPrice());
+    }
+    @Test
+    @DisplayName("주문 정보 상세 조회 - 실패 - ORDER_ITEM_NOT_FOUND")
+    void getOrderDetails_Failure_ORDER_ITEM_NOT_FOUND() {
+        // given
+        given(orderItemRepository.findAllByStoreIdAndOrderId(storeId, orderId)).willReturn(List.of());
+
+        // when & then
+        BusinessException exception = assertThrows(BusinessException.class, () ->
+                orderService.getOrderDetails(storeId, orderId));
+        assertEquals("주문 상품이 존재하지 않거나 권한이 없습니다.", exception.getMessage());
+        assertEquals(OrderErrorCode.ORDER_ITEM_NOT_FOUND, exception.getErrorCode());
     }
 }
