@@ -2,11 +2,11 @@ package com.spicy.backend.demandplan.adapter;
 
 import com.spicy.backend.demandplan.controller.dto.StockResponseDto;
 import com.spicy.backend.demandplan.service.ExternalDataFetcher;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Configuration
+@Component
 public class ExternalDataFetcherImpl implements ExternalDataFetcher {
 
     @Override
