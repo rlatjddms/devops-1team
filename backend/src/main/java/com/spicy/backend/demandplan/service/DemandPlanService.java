@@ -31,6 +31,7 @@ public class DemandPlanService {
 
         // 최근 7일간 재고 파악 후 권장 수량 계산 로직
         List<Integer> sales = infoProvider.getWeeklyOrderCount(productId);
+        // sales 리스트 null 체크 로직 추가
         int totalSales = sales
                 .stream()
                 .mapToInt(i -> i).sum();
