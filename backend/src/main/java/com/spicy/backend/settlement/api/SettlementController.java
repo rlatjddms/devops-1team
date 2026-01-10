@@ -2,6 +2,7 @@ package com.spicy.backend.settlement.api;
 
 
 import com.spicy.backend.settlement.dto.request.DailySettlementRequest;
+import com.spicy.backend.settlement.dto.request.MonthlySettlementRequest;
 import com.spicy.backend.settlement.dto.response.DailySettlementResponse;
 import com.spicy.backend.settlement.dto.response.MonthlySettlementResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,7 +40,7 @@ public class SettlementController {
 
     @GetMapping("/monthly")
     public ResponseEntity<MonthlySettlementResponse> getMonthlySettlement(
-            @Valid MonthlySettlementResponse request) {
+            @Valid MonthlySettlementRequest request) {
         return ResponseEntity.ok(null);
     }
 
