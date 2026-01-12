@@ -31,15 +31,6 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
     private final CartItemRepository cartItemRepository;
 
-    /**
-     * Order 및 OrderItem 생성
-     *
-     * @param storeId 가맹점 식별 번호
-     * @param userId 사용자 식별 번호
-     * @param request 주문 정보
-     * @return 주문 번호 반환
-     * @throws BusinessException(CartItemErrorCode.CART_ITEM_NOT_FOUND) 유저 정보 없음
-     * */
     @Transactional
     public OrderCreateResponse createOrder(Long storeId, Long userId, OrderCreateRequest request) {
         // 사용자 검증 및 장바구니 가져오기
