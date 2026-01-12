@@ -7,6 +7,7 @@ import com.spicy.backend.order.dao.cartitems.CartItemRepository;
 import com.spicy.backend.order.domain.CartItem;
 import com.spicy.backend.order.domain.Product;
 import com.spicy.backend.order.dto.request.CartItemCreateRequest;
+import com.spicy.backend.order.dto.response.CartItemResponse;
 import com.spicy.backend.order.error.CartItemErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -85,7 +86,6 @@ class CartItemServiceTests {
         // then
         assertEquals(cartId, response.get(0));
     }
-
     @Test
     @DisplayName("장바구니 상품 생성 - 실패 - RESOURCE_NOT_FOUND")
     void addCartItem_Failure_RESOURCE_NOT_FOUND() {
@@ -97,6 +97,21 @@ class CartItemServiceTests {
                 cartItemService.addCartItem(userId, storeId, List.of(cartItemCreateRequest))
         );
         assertEquals(GlobalErrorCode.RESOURCE_NOT_FOUND, exception.getErrorCode());
+    }
+
+
+    @Test
+    @DisplayName("장바구니 상품 조회 - 성공")
+    void getCartItems_Success() {
+        // given
+        given(cartItemRepository.findAllByUserIdAndStoreId(userId, storeId)).willReturn(List.of(cartItem));
+
+        // when
+        List<CartItemResponse> responses = cartItemService.getCartItems(userId, storeId);
+
+        // then
+        assertEquals(product, responses.get(0).product());
+        assertEquals(quantity, responses.get(0).quantity());
     }
 
 
