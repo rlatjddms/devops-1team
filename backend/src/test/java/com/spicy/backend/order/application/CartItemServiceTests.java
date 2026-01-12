@@ -7,6 +7,7 @@ import com.spicy.backend.order.dao.cartitems.CartItemRepository;
 import com.spicy.backend.order.domain.CartItem;
 import com.spicy.backend.order.domain.Product;
 import com.spicy.backend.order.dto.request.CartItemCreateRequest;
+import com.spicy.backend.order.error.CartItemErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -84,6 +85,7 @@ class CartItemServiceTests {
         // then
         assertEquals(cartId, response.get(0));
     }
+
     @Test
     @DisplayName("장바구니 상품 생성 - 실패 - RESOURCE_NOT_FOUND")
     void addCartItem_Failure_RESOURCE_NOT_FOUND() {
@@ -95,5 +97,28 @@ class CartItemServiceTests {
                 cartItemService.addCartItem(userId, storeId, List.of(cartItemCreateRequest))
         );
         assertEquals(GlobalErrorCode.RESOURCE_NOT_FOUND, exception.getErrorCode());
+    }
+
+
+    @Test
+    @DisplayName("장바구니 상품 삭제 - 성공")
+    void deleteCartItem_Success() {
+        // given
+        given(cartItemRepository.findByUserIdAndId(userId, cartItem.getId())).willReturn(Optional.of(cartItem));
+
+        // when & then
+        cartItemService.deleteCartItem(userId, cartItem.getId());
+    }
+    @Test
+    @DisplayName("장바구니 상품 삭제 - 실패 - CART_NOT_FOUND")
+    void deleteCartItem_Failure_CART_NOT_FOUND() {
+        // given
+        given(cartItemRepository.findByUserIdAndId(userId, cartItem.getId())).willReturn(Optional.empty());
+
+        // when & then
+        BusinessException exception = assertThrows(BusinessException.class, () ->
+                cartItemService.deleteCartItem(userId, cartItem.getId())
+        );
+        assertEquals(CartItemErrorCode.CART_ITEM_NOT_FOUND, exception.getErrorCode());
     }
 }
