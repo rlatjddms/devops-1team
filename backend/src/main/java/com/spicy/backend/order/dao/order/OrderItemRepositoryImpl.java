@@ -1,4 +1,4 @@
-package com.spicy.backend.order.dao;
+package com.spicy.backend.order.dao.order;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.spicy.backend.order.domain.OrderItem;

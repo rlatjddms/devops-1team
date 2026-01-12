@@ -2,8 +2,8 @@ package com.spicy.backend.order.application;
 
 import com.spicy.backend.global.error.errorcode.GlobalErrorCode;
 import com.spicy.backend.global.error.exception.BusinessException;
-import com.spicy.backend.order.dao.OrderItemRepository;
-import com.spicy.backend.order.dao.OrderRepository;
+import com.spicy.backend.order.dao.order.OrderItemRepository;
+import com.spicy.backend.order.dao.order.OrderRepository;
 import com.spicy.backend.order.domain.Order;
 import com.spicy.backend.order.domain.OrderItem;
 import com.spicy.backend.order.dto.request.OrderItemRequest;

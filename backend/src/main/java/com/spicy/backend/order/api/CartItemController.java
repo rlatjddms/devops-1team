@@ -23,11 +23,12 @@ public class CartItemController {
 
     // 장바구니 조회
     @Operation(summary = "장바구니 조회", description = "가맹점주가 장바구니에 추가한 목록 조회")
-    @GetMapping("/{user-id}")
+    @GetMapping("/{user-id}/{store-id}")
     public ResponseEntity<ApiResponse<List<CartItemResponse>>> getCartItems(
-            @PathVariable("user-id") Long userId    // 가맹점주
+            @PathVariable("user-id") Long userId,    // 가맹점주
+            @PathVariable("store-id") Long storeId
     ) {
-        return null;
+        return ResponseEntity.ok(ApiResponse.success(cartItemService.getCartItems(userId, storeId)));
     }
 
     // 장바구니에서 상품 삭제
