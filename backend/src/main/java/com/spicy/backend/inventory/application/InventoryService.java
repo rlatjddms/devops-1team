@@ -142,6 +142,9 @@ public class InventoryService {
     }
 
     public ProductSummaryResponse searchByName(String name) {
+        //유통기한 업데이트
+        updateExpiredInventoryStatus();
+
         List<Inventory> inventories = inventoryRepository.findByProductName(name);
         // 없으면 예외처리
         if (inventories.isEmpty()) {
