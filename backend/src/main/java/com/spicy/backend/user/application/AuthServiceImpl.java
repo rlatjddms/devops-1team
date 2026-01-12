@@ -77,6 +77,12 @@ public class AuthServiceImpl implements AuthService {
 
         RefreshToken savedToken = refreshTokenRepository.findByToken(refreshToken)
                 .orElseThrow(() -> new BusinessException(UserErrorCode.INVALID_TOKEN));
+
+        if (savedToken.getExpiredAt().isBefore(LocalDateTime.now())) {
+            refreshTokenRepository.delete(savedToken);
+            throw new BusinessException(UserErrorCode.INVALID_TOKEN);
+        }
+
         User user = userRepository.findById(savedToken.getUserId())
                 .orElseThrow(() -> new BusinessException(UserErrorCode.USER_NOT_FOUND));
 
