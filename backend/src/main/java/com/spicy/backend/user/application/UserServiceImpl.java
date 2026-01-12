@@ -7,6 +7,7 @@ import com.spicy.backend.user.dto.request.UpdatePasswordRequest;
 import com.spicy.backend.user.dto.response.MyInfoResponse;
 import com.spicy.backend.user.dto.response.UserHQViewResponse;
 import com.spicy.backend.user.error.UserErrorCode;
+import com.spicy.backend.user.storage.RefreshTokenRepository;
 import com.spicy.backend.user.storage.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -69,6 +71,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(UserErrorCode.USER_NOT_FOUND));
 
+        refreshTokenRepository.deleteByUserId(userId);
         userRepository.delete(user);
     }
 }
