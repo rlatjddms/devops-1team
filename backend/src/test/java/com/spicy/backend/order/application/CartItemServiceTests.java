@@ -104,7 +104,7 @@ class CartItemServiceTests {
     @DisplayName("장바구니 상품 조회 - 성공")
     void getCartItems_Success() {
         // given
-        given(cartItemRepository.findAllByUserIdAndStoreId(userId, storeId)).willReturn(List.of(cartItem));
+        given(cartItemRepository.findAllByUserIdAndStoreIdAndDeletedAtIsNull(userId, storeId)).willReturn(List.of(cartItem));
 
         // when
         List<CartItemResponse> responses = cartItemService.getCartItems(userId, storeId);

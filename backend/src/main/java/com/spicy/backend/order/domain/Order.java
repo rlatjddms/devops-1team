@@ -72,7 +72,7 @@ public class Order extends BaseEntity {
 
     // 주문 일시 - createdAt
 
-    public void update(BigDecimal totalPrice) {
+    public void updateTotalPrice(BigDecimal totalPrice) {
         this.totalAmount = totalPrice;
     }
 

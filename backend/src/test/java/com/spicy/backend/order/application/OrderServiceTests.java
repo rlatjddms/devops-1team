@@ -162,7 +162,7 @@ class OrderServiceTests {
 
         given(orderItemRepository.saveAll(anyList())).willReturn(List.of());
 
-        given(cartItemRepository.findAllByUserIdAndStoreId(userId, storeId)).willReturn(List.of(cartItem));
+        given(cartItemRepository.findAllByUserIdAndStoreIdAndDeletedAtIsNull(userId, storeId)).willReturn(List.of(cartItem));
 
         // when
         OrderCreateResponse response = orderService.createOrder(storeId, userId, orderCreateRequest);

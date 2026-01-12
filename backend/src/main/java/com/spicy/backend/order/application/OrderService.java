@@ -1,6 +1,5 @@
 package com.spicy.backend.order.application;
 
-import com.spicy.backend.global.error.errorcode.GlobalErrorCode;
 import com.spicy.backend.global.error.exception.BusinessException;
 import com.spicy.backend.order.dao.cartitems.CartItemRepository;
 import com.spicy.backend.order.dao.order.OrderItemRepository;
@@ -35,43 +34,23 @@ public class OrderService {
     /**
      * Order 및 OrderItem 생성
      *
-     * @param userId 사용자 id
-     * @param request 주문 정보와 주문 상품 정보
+     * @param storeId 가맹점 식별 번호
+     * @param userId 사용자 식별 번호
+     * @param request 주문 정보
      * @return 주문 번호 반환
-     * @throws BusinessException(GlobalErrorCode.INVALID_INPUT_VALUE) 유저 정보 없음
+     * @throws BusinessException(CartItemErrorCode.CART_ITEM_NOT_FOUND) 유저 정보 없음
      * */
     @Transactional
     public OrderCreateResponse createOrder(Long storeId, Long userId, OrderCreateRequest request) {
         // 사용자 검증 및 장바구니 가져오기
-        List<CartItem> cartList = cartItemRepository.findAllByUserIdAndStoreId(userId, storeId);
-
+        List<CartItem> cartList = cartItemRepository.findAllByUserIdAndStoreIdAndDeletedAtIsNull(userId, storeId);
         if (cartList.isEmpty()) throw new BusinessException(CartItemErrorCode.CART_ITEM_NOT_FOUND);
 
-        // Order totalAmount 생성
-        BigDecimal totalPrice = BigDecimal.ZERO;
+        // Order 생성 및 저장
+        Order order = orderRepository.save(Order.create(request, storeId));
 
-        // Order 생성
-        Order order = Order.create(request, storeId);
-
-        // orderId 받아오기 위해 먼저 저장
-        order = orderRepository.save(order);
-
-        // OrderItem 생성
-        List<OrderItem> itemList = new ArrayList<>();
-        for (CartItem item : cartList) {
-            OrderItem orderItem = OrderItem.create(item);
-            orderItem.updateOrderId(order.getId());
-
-            totalPrice = totalPrice.add(orderItem.getTotalPrice());
-
-            itemList.add(orderItem);
-        }
-
-        // Order totalAmount 업데이트
-        order.update(totalPrice);
-
-        // OrderItem 저장
-        orderItemRepository.saveAll(itemList);
+        // OrderItem 생성 및 저장
+        createAndSaveOrderItems(cartList, order);
 
         // 장바구니에서 삭제
         cartItemRepository.deleteAll(cartList);
@@ -113,5 +92,25 @@ public class OrderService {
         }
 
         return OrderCanceledResponse.from(order, items);
+    }
+
+    public void createAndSaveOrderItems(
+            List<CartItem> cartList,
+            Order order
+    ) {
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        List<OrderItem> itemList = new ArrayList<>();
+
+        for (CartItem item : cartList) {
+            OrderItem orderItem = OrderItem.create(item);
+            orderItem.updateOrderId(order.getId());
+
+            order.updateTotalPrice(totalPrice.add(orderItem.getTotalPrice()));
+
+            itemList.add(orderItem);
+        }
+
+        // OrderItem 저장
+        orderItemRepository.saveAll(itemList);
     }
 }

@@ -38,7 +38,7 @@ public class CartItemService {
     @Transactional(readOnly = true)
     public List<CartItemResponse> getCartItems(Long userId, Long storeId) {
         // CartItem 조회
-        List<CartItem> cartItems = cartItemRepository.findAllByUserIdAndStoreId(userId, storeId);
+        List<CartItem> cartItems = cartItemRepository.findAllByUserIdAndStoreIdAndDeletedAtIsNull(userId, storeId);
 
         return CartItemResponse.from(cartItems);
     }
