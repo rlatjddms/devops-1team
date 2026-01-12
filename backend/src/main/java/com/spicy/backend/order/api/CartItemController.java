@@ -27,7 +27,6 @@ public class CartItemController {
     public ResponseEntity<ApiResponse<List<CartItemResponse>>> getCartItems(
             @PathVariable("user-id") Long userId    // 가맹점주
     ) {
-
         return null;
     }
 
