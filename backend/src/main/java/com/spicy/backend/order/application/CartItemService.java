@@ -1,12 +1,17 @@
 package com.spicy.backend.order.application;
 
+import com.spicy.backend.global.error.errorcode.GlobalErrorCode;
+import com.spicy.backend.global.error.exception.BusinessException;
+import com.spicy.backend.order.dao.ProductRepository;
 import com.spicy.backend.order.dao.cartitems.CartItemRepository;
 import com.spicy.backend.order.domain.CartItem;
+import com.spicy.backend.order.dto.request.CartItemCreateRequest;
 import com.spicy.backend.order.dto.response.CartItemResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -14,6 +19,32 @@ import java.util.List;
 public class CartItemService {
 
     private final CartItemRepository cartItemRepository;
+    private final ProductRepository productRepository;
+
+    @Transactional(rollbackFor = BusinessException.class)
+    public List<Long> addCartItem(Long userId, Long storeId, List<CartItemCreateRequest> requests) {
+        // CartItem 생성 및 저장
+        List<CartItem> cartItems = new ArrayList<>();
+        List<Long> cartItemIdList = new ArrayList<>();
+        for (CartItemCreateRequest request : requests) {
+            CartItem cartItem = CartItem.builder()
+                    .storeId(storeId)
+                    .userId(userId)
+                    .product(
+                            productRepository.findById(request.productId())
+                                    .orElseThrow(() -> new BusinessException(GlobalErrorCode.RESOURCE_NOT_FOUND))
+                            // 나중에 에러 코드 변경해야함 PRODUCT_NOT_FOUND
+                    )
+                    .quantity(request.quantity())
+                    .build();
+            cartItems.add(cartItem);
+            cartItemIdList.add(cartItem.getId());
+        }
+
+        cartItemRepository.saveAll(cartItems);
+
+        return cartItemIdList;
+    }
 
     @Transactional(readOnly = true)
     public List<CartItemResponse> getCartItems(Long userId, Long storeId) {
