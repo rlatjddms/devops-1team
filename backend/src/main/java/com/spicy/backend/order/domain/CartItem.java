@@ -30,6 +30,10 @@ public class CartItem extends BaseEntity {
     @Column(nullable = false)
     private Long storeId;
 
+    // fk: 사용자 식별 번호
+    @Column(nullable = false)
+    private Long userId;
+
     // fk: 상품 식별 번호
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
