@@ -11,6 +11,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,6 +44,7 @@ public class OrderItem extends BaseEntity {
 
     // 주문 수량
     @Column(nullable = false)
+    @Min(1)
     private Long quantity;
 
     // 개별 단가
@@ -77,6 +79,10 @@ public class OrderItem extends BaseEntity {
     }
 
     public void updateStatus(Status status) {
+        if (status == null) {
+            throw new BusinessException(GlobalErrorCode.INVALID_INPUT_VALUE);
+        }
+
         this.status = status;
     }
 }

@@ -26,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class CartItemServiceTests {
@@ -126,6 +128,8 @@ class CartItemServiceTests {
 
         // when & then
         cartItemService.deleteCartItem(userId, cartItem.getId(), storeId);
+
+        verify(cartItemRepository, times(1)).delete(cartItem);
     }
     @Test
     @DisplayName("장바구니 상품 삭제 - 실패 - CART_NOT_FOUND")

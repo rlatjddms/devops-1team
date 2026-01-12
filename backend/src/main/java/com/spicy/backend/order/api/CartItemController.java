@@ -48,7 +48,7 @@ public class CartItemController {
 
     // 장바구니에서 상품 삭제
     @Operation(summary = "장바구니 상품 삭제", description = "장바구니에서 선택한 상품들 삭제")
-    @DeleteMapping("/{user-id}/{store-id}{cart-item-id}")
+    @DeleteMapping("/{user-id}/{store-id}/{cart-item-id}")
     public ResponseEntity<ApiResponse<String>> deleteCartItems(
             @PathVariable("user-id") Long userId,    // 가맹점주
             @PathVariable("cart-item-id") Long cartItemId,
