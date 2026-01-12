@@ -44,7 +44,7 @@ public class AuthController {
     @Operation(summary = "토큰 재발급", description = "만료된 Access Token을 Refresh Token을 사용하여 재발급한다.")
     @PostMapping("/reissue")
     public ResponseEntity<ApiResponse<LoginResponse>> reissue(
-            @RequestBody ReissueRequest request
+            @Valid @RequestBody ReissueRequest request
     ) {
         LoginResponse response = authService.reissue(request.refreshToken());
         return ResponseEntity.ok(ApiResponse.success(response));
