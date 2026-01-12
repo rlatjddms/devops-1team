@@ -96,9 +96,9 @@ public class OrderService {
         List<OrderItem> items = orderItemRepository.findAllByStoreIdAndOrderIdAndDeletedAtIsNullOrderByCreatedAtDesc(storeId, orderId);
 
         // 주문과 주문 상품의 상태를 취소로 변경
-        order.delete();
-        for (OrderItem item : items) {
-            item.delete();
+        order.updateStatus(Status.CANCELLED);
+        for (OrderItem orderItem : items) {
+            orderItem.updateStatus(Status.CANCELLED);
         }
 
         return OrderCanceledResponse.from(order, items);

@@ -4,8 +4,11 @@ import com.spicy.backend.global.entity.BaseEntity;
 import com.spicy.backend.global.error.errorcode.GlobalErrorCode;
 import com.spicy.backend.global.error.exception.BusinessException;
 import com.spicy.backend.order.dto.request.OrderItemRequest;
+import com.spicy.backend.order.enums.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -51,6 +54,12 @@ public class OrderItem extends BaseEntity {
     @Column(nullable = false)
     private BigDecimal totalPrice;
 
+    // 주문 상태
+    @Column(nullable = false)
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.PENDING;
+
     public static OrderItem create(OrderItemRequest request) {
         return OrderItem.builder()
                 .productId(request.productId())
@@ -68,5 +77,9 @@ public class OrderItem extends BaseEntity {
         this.orderId = id;
 
         return this;
+    }
+
+    public void updateStatus(Status status) {
+        this.status = status;
     }
 }

@@ -46,8 +46,9 @@ public class Order extends BaseEntity {
 
     // 주문 상태
     @Column(nullable = false)
+    @Builder.Default
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.PENDING;
 
     // 희망 배송일
     @Column(nullable = false)
@@ -87,5 +88,9 @@ public class Order extends BaseEntity {
                 .orderNumber(OrderNumberGenerator.generate())
                 .totalAmount(BigDecimal.ZERO)
                 .build();
+    }
+
+    public void updateStatus(Status status) {
+        this.status = status;
     }
 }
