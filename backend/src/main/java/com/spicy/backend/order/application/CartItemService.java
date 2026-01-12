@@ -26,13 +26,14 @@ public class CartItemService {
     public List<Long> addCartItem(Long userId, Long storeId, List<CartItemCreateRequest> requests) {
         // CartItem 생성 및 저장
         List<CartItem> cartItems = new ArrayList<>();
-        List<Long> cartItemIdList = new ArrayList<>();
 
-        createCartItems(cartItems, cartItemIdList, requests, userId, storeId);
+        createCartItems(cartItems, requests, userId, storeId);
 
-        cartItemRepository.saveAll(cartItems);
+        List<CartItem> savedCartItems = cartItemRepository.saveAll(cartItems);
 
-        return cartItemIdList;
+        return savedCartItems.stream()
+                .map(CartItem::getId)
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -53,9 +54,8 @@ public class CartItemService {
         cartItemRepository.delete(item);
     }
 
-    public void createCartItems(
+    private void createCartItems(
             List<CartItem> cartItemList,
-            List<Long> cartItemIdList,
             List<CartItemCreateRequest> requests,
             Long userId,
             Long storeId
@@ -72,7 +72,6 @@ public class CartItemService {
                     .quantity(request.quantity())
                     .build();
             cartItemList.add(cartItem);
-            cartItemIdList.add(cartItem.getId());
         }
     }
 }

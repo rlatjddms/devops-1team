@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -79,6 +80,8 @@ class CartItemServiceTests {
     void addCartItem_Success() {
         // given
         given(productRepository.findById(productId)).willReturn(Optional.of(product));
+
+        given(cartItemRepository.saveAll(anyList())).willReturn(List.of(cartItem));
 
         // when
         List<Long> response = cartItemService.addCartItem(userId, storeId, List.of(cartItemCreateRequest));
