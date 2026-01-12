@@ -11,7 +11,7 @@ public record InventoryOutboundRequest(
         @Min(value = 1, message = "수량은 1 이상이어야 합니다.")
         int quantity,
         // 적정 유통기한
-        @NotNull(message = "희망 유통기한 날짜는 필수입니다.")
-        int monthsUntilExpiration
+        @Min(value = 1, message = "유통기한은 1개월 이상이어야 합니다.")
+        Integer monthsUntilExpiration
 ) {
 }
