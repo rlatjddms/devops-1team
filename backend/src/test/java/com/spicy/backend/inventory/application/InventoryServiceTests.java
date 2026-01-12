@@ -14,6 +14,7 @@ import com.spicy.backend.inventory.storage.MinimumProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -85,12 +86,11 @@ class InventoryServiceTests {
         ProductResponse response = inventoryService.getAllProduct();
 
         //then
-
         assertThat(response.products()).hasSize(1);
         ProductSummaryResponse summary = response.products().get(0);
 
-        assertEquals(summary.productName(),"사이다");
-        assertEquals(summary.totalQuantity(),8);
+        assertEquals("사이다", summary.productName());
+        assertEquals(8, summary.totalQuantity());
         assertThat(summary.products()).hasSize(2);
 
 
@@ -139,8 +139,8 @@ class InventoryServiceTests {
         ProductSummaryResponse result = inventoryService.searchProduct(id);
 
         // then
-        assertEquals(result.totalQuantity(),15);
-        assertEquals(result.minimumQuantity(),3);
+        assertEquals(15,result.totalQuantity());
+        assertEquals(3,result.minimumQuantity());
     }
 
     @Test
@@ -185,8 +185,8 @@ class InventoryServiceTests {
         ProductSummaryResponse result = inventoryService.searchByName(name);
 
         // then
-        assertEquals(result.totalQuantity(),15);
-        assertEquals(result.minimumQuantity(),3);
+        assertEquals(15,result.totalQuantity());
+        assertEquals(3,result.minimumQuantity());
     }
 
     @Test
@@ -234,19 +234,19 @@ class InventoryServiceTests {
                 .price(BigDecimal.valueOf(1200))
                 .description("음료")
                 .build();
-        int count = request.quantity();
-
         when(inventoryRepository.findValidProductsWithLock(
                 eq(request.id()),
                 any(LocalDate.class)
         )).thenReturn(List.of(activeInventory));
-
-
         //when
         inventoryService.outbound(request);
-
         //then
-        verify(inventoryRepository, times(1)).saveAll(any());
+        ArgumentCaptor<List<Inventory>> captor = ArgumentCaptor.forClass(List.class);
+        verify(inventoryRepository, times(1)).saveAll(captor.capture());
+
+        List<Inventory> saved = captor.getValue();
+        // 출고 후 재고 수량이 감소했는지 검증
+        assertEquals(3, saved.get(0).getQuantity());
     }
 
 }
