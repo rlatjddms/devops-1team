@@ -1,6 +1,8 @@
 package com.spicy.backend.user.application;
 
 import com.spicy.backend.global.jwt.JwtProvider;
+import com.spicy.backend.user.storage.RefreshTokenRepository;
+import com.spicy.backend.user.storage.UserRepository;
 import com.spicy.backend.user.domain.RefreshToken;
 import com.spicy.backend.user.domain.User;
 import com.spicy.backend.user.dto.request.LoginRequest;
@@ -10,8 +12,8 @@ import com.spicy.backend.user.dto.response.LoginResponse;
 import com.spicy.backend.user.enums.UserRole;
 import com.spicy.backend.user.error.DuplicateLoginIdException;
 import com.spicy.backend.user.error.InvalidLoginException;
-import com.spicy.backend.user.storage.RefreshTokenRepository;
-import com.spicy.backend.user.storage.UserRepository;
+import com.spicy.backend.user.error.InvalidTokenException;
+import com.spicy.backend.user.error.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -65,6 +67,25 @@ public class AuthServiceImpl implements AuthService {
         refreshTokenRepository.save(new RefreshToken(user.getId(),refreshToken, expiredAt));
 
         return new LoginResponse(accessToken, refreshToken);
+    }
+
+    @Override
+    public LoginResponse reissue(String refreshToken) {
+
+        if (!jwtProvider.validateToken(refreshToken)) {
+            throw new InvalidTokenException();
+        }
+
+        RefreshToken savedToken = refreshTokenRepository.findByToken(refreshToken).orElseThrow(InvalidTokenException::new);
+        User user = userRepository.findById(savedToken.getUserId()).orElseThrow(UserNotFoundException::new);
+
+        String newAccessToken = jwtProvider.createAccessToken(user);
+        String newRefreshToken = jwtProvider.createRefreshToken(user);
+
+        refreshTokenRepository.delete(savedToken);
+        refreshTokenRepository.save(new RefreshToken(user.getId(), newRefreshToken, jwtProvider.getRefreshTokenExpiredAt()));
+
+        return new LoginResponse(newAccessToken, newRefreshToken);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.spicy.backend.global.common.ApiResponse;
 import com.spicy.backend.user.application.AuthService;
 import com.spicy.backend.user.dto.request.LoginRequest;
 import com.spicy.backend.user.dto.request.LogoutRequest;
+import com.spicy.backend.user.dto.request.ReissueRequest;
 import com.spicy.backend.user.dto.request.SignUpRequest;
 import com.spicy.backend.user.dto.response.LoginResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,6 +38,15 @@ public class AuthController {
             @Valid @RequestBody LoginRequest request
     ) {
         LoginResponse response = authService.login(request);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @Operation(summary = "토큰 재발급", description = "만료된 Access Token을 Refresh Token을 사용하여 재발급한다.")
+    @PostMapping("/reissue")
+    public ResponseEntity<ApiResponse<LoginResponse>> reissue(
+            @RequestBody ReissueRequest request
+    ) {
+        LoginResponse response = authService.reissue(request.refreshToken());
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
