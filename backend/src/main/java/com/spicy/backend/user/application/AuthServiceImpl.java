@@ -1,8 +1,7 @@
 package com.spicy.backend.user.application;
 
+import com.spicy.backend.global.error.exception.BusinessException;
 import com.spicy.backend.global.jwt.JwtProvider;
-import com.spicy.backend.user.storage.RefreshTokenRepository;
-import com.spicy.backend.user.storage.UserRepository;
 import com.spicy.backend.user.domain.RefreshToken;
 import com.spicy.backend.user.domain.User;
 import com.spicy.backend.user.dto.request.LoginRequest;
@@ -10,10 +9,9 @@ import com.spicy.backend.user.dto.request.LogoutRequest;
 import com.spicy.backend.user.dto.request.SignUpRequest;
 import com.spicy.backend.user.dto.response.LoginResponse;
 import com.spicy.backend.user.enums.UserRole;
-import com.spicy.backend.user.error.DuplicateLoginIdException;
-import com.spicy.backend.user.error.InvalidLoginException;
-import com.spicy.backend.user.error.InvalidTokenException;
-import com.spicy.backend.user.error.UserNotFoundException;
+import com.spicy.backend.user.error.UserErrorCode;
+import com.spicy.backend.user.storage.RefreshTokenRepository;
+import com.spicy.backend.user.storage.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
     public void signup(SignUpRequest request) {
 
         if (userRepository.existsByLoginId(request.loginId())) {
-            throw new DuplicateLoginIdException();
+            throw new BusinessException(UserErrorCode.DUPLICATE_LOGIN_ID);
         }
 
         User user = User.builder()
@@ -52,10 +50,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponse login(LoginRequest request) {
 
-        User user = userRepository.findByLoginId(request.loginId()).orElseThrow(InvalidLoginException::new);
+        User user = userRepository.findByLoginId(request.loginId())
+                .orElseThrow(() -> new BusinessException(UserErrorCode.INVALID_LOGIN));
 
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
-            throw new InvalidLoginException();
+            throw new BusinessException(UserErrorCode.INVALID_LOGIN);
         }
 
         String accessToken = jwtProvider.createAccessToken(user);
@@ -73,11 +72,13 @@ public class AuthServiceImpl implements AuthService {
     public LoginResponse reissue(String refreshToken) {
 
         if (!jwtProvider.validateToken(refreshToken)) {
-            throw new InvalidTokenException();
+            throw new BusinessException(UserErrorCode.INVALID_TOKEN);
         }
 
-        RefreshToken savedToken = refreshTokenRepository.findByToken(refreshToken).orElseThrow(InvalidTokenException::new);
-        User user = userRepository.findById(savedToken.getUserId()).orElseThrow(UserNotFoundException::new);
+        RefreshToken savedToken = refreshTokenRepository.findByToken(refreshToken)
+                .orElseThrow(() -> new BusinessException(UserErrorCode.INVALID_TOKEN));
+        User user = userRepository.findById(savedToken.getUserId())
+                .orElseThrow(() -> new BusinessException(UserErrorCode.USER_NOT_FOUND));
 
         String newAccessToken = jwtProvider.createAccessToken(user);
         String newRefreshToken = jwtProvider.createRefreshToken(user);
