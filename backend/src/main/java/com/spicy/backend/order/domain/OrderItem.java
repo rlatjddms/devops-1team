@@ -1,5 +1,6 @@
 package com.spicy.backend.order.domain;
 
+import com.spicy.backend.global.entity.BaseEntity;
 import com.spicy.backend.global.error.errorcode.GlobalErrorCode;
 import com.spicy.backend.global.error.exception.BusinessException;
 import com.spicy.backend.order.dto.request.OrderItemRequest;
@@ -21,7 +22,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderItem {
+public class OrderItem extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

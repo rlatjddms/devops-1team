@@ -1,14 +1,15 @@
 package com.spicy.backend.order.application;
 
 import com.spicy.backend.global.error.errorcode.GlobalErrorCode;
+import com.spicy.backend.global.error.exception.BusinessException;
 import com.spicy.backend.order.dao.OrderItemRepository;
 import com.spicy.backend.order.dao.OrderRepository;
 import com.spicy.backend.order.domain.Order;
 import com.spicy.backend.order.domain.OrderItem;
 import com.spicy.backend.order.dto.request.OrderItemRequest;
 import com.spicy.backend.order.dto.request.wrapper.OrderAndOrderItemRequest;
+import com.spicy.backend.order.dto.response.OrderCanceledResponse;
 import com.spicy.backend.order.dto.response.OrderCreateResponse;
-import com.spicy.backend.global.error.exception.BusinessException;
 import com.spicy.backend.order.dto.response.OrderItemResponse;
 import com.spicy.backend.order.dto.response.OrderResponse;
 import com.spicy.backend.order.enums.Status;
@@ -67,22 +68,39 @@ public class OrderService {
         return OrderCreateResponse.from(order.getId());
     }
 
-
+    @Transactional(readOnly = true)
     public List<OrderResponse> getAllOrders(Long storeId, Status status) {
         // status에 따라 주문 리스트 조회
-        List<Order> orders = orderRepository.findAllByStoreIdAndStatusOrderByCreatedAt(storeId, status);
+        List<Order> orders = orderRepository.findAllByStoreIdAndStatusAndDeletedAtIsNullOrderByCreatedAtDesc(storeId, status);
 
         // 리스트 반환
         return OrderResponse.from(orders);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderItemResponse> getOrderDetails(Long storeId, Long orderId) {
         // storeId, orderId로 OrderItem 리스트 조회
         // 리스트 길이가 0일 때 예외 발생
-        List<OrderItem> itemList = orderItemRepository.findAllByStoreIdAndOrderId(storeId, orderId);
+        List<OrderItem> itemList = orderItemRepository.findAllByStoreIdAndOrderIdAndDeletedAtIsNullOrderByCreatedAtDesc(storeId, orderId);
         if (itemList.isEmpty()) throw new BusinessException(OrderErrorCode.ORDER_ITEM_NOT_FOUND);
 
         // OrderItem 리스트를 OrderItemResponse 리스트로 변환 후 반환
         return OrderItemResponse.from(itemList);
+    }
+
+    @Transactional(rollbackFor = BusinessException.class)
+    public OrderCanceledResponse cancelOrder(Long storeId, Long orderId) {
+        // 사용자 검증
+        Order order = orderRepository.findByStoreIdAndIdAndDeletedAtIsNull(storeId, orderId)
+                .orElseThrow(() -> new BusinessException(OrderErrorCode.ORDER_NOT_FOUND));
+        List<OrderItem> items = orderItemRepository.findAllByStoreIdAndOrderIdAndDeletedAtIsNullOrderByCreatedAtDesc(storeId, orderId);
+
+        // 주문과 주문 상품의 상태를 취소로 변경
+        order.delete();
+        for (OrderItem item : items) {
+            item.delete();
+        }
+
+        return OrderCanceledResponse.from(order, items);
     }
 }

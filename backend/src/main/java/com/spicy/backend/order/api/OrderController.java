@@ -2,8 +2,8 @@ package com.spicy.backend.order.api;
 
 import com.spicy.backend.global.common.ApiResponse;
 import com.spicy.backend.order.application.OrderService;
-import com.spicy.backend.order.dto.request.OrderCancelRequest;
 import com.spicy.backend.order.dto.request.wrapper.OrderAndOrderItemRequest;
+import com.spicy.backend.order.dto.response.OrderCanceledResponse;
 import com.spicy.backend.order.dto.response.OrderCreateResponse;
 import com.spicy.backend.order.dto.response.OrderItemResponse;
 import com.spicy.backend.order.dto.response.OrderResponse;
@@ -60,12 +60,12 @@ public class OrderController {
 
     // 주문 취소
     @Operation(summary = "주문 취소", description = "가맹점주가 생성했던 주문 중 요청받은 건들에 대해 취소를 진행")
-    @PatchMapping("/{user-id}")
-    public ResponseEntity<ApiResponse<List<OrderResponse>>> cancelOrders(
-            @PathVariable("user-id") Long userId,   // 가맹점주
-            @RequestBody OrderCancelRequest request
+    @PatchMapping("/{store-id}/{order-id}")
+    public ResponseEntity<ApiResponse<OrderCanceledResponse>> cancelOrders(
+            @PathVariable("store-id") Long storeId,   // 가맹점 식별 번호
+            @PathVariable("order-id") Long orderId
     ) {
 
-        return null;
+        return ResponseEntity.ok(ApiResponse.success(orderService.cancelOrder(storeId, orderId)));
     }
 }

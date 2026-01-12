@@ -15,14 +15,16 @@ public class OrderItemRepositoryImpl implements OrderItemRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<OrderItem> findAllByStoreIdAndOrderId(Long storeId, Long orderId) {
+    public List<OrderItem> findAllByStoreIdAndOrderIdAndDeletedAtIsNullOrderByCreatedAtDesc(Long storeId, Long orderId) {
         return queryFactory
                 .selectFrom(orderItem)
                 .join(order).on(orderItem.orderId.eq(order.id))
                 .where(
                         order.id.eq(orderId),
-                        order.storeId.eq(storeId)
+                        order.storeId.eq(storeId),
+                        order.deletedAt.isNull()
                 )
+                .orderBy(order.createdAt.desc())
                 .fetch();
     }
 }
