@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -85,21 +84,26 @@ public class OrderService {
         return OrderCanceledResponse.from(order, items);
     }
 
-    public void createAndSaveOrderItems(
+    private void createAndSaveOrderItems(
             List<CartItem> cartList,
             Order order
     ) {
-        BigDecimal totalPrice = BigDecimal.ZERO;
-        List<OrderItem> itemList = new ArrayList<>();
+        // CartItem -> OrderItem 변환
+        List<OrderItem> itemList = cartList.stream()
+                .map(item -> {
+                    OrderItem orderItem = OrderItem.create(item);
+                    orderItem.updateOrderId(order.getId());
+                    return orderItem;
+                })
+                .toList();
 
-        for (CartItem item : cartList) {
-            OrderItem orderItem = OrderItem.create(item);
-            orderItem.updateOrderId(order.getId());
+        // 총 주문 금액 계산
+        BigDecimal totalPrice = itemList.stream()
+                .map(OrderItem::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            order.updateTotalPrice(totalPrice.add(orderItem.getTotalPrice()));
-
-            itemList.add(orderItem);
-        }
+        // 총 주문 금액 갱신
+        order.updateTotalPrice(totalPrice);
 
         // OrderItem 저장
         orderItemRepository.saveAll(itemList);
