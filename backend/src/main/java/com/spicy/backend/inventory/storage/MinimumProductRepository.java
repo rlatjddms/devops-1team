@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MinimumProductRepository extends JpaRepository<MinimumProduct, Long> {
+    MinimumProduct findByProductIdAndStoreId(Long id, Long storeId);
 }
