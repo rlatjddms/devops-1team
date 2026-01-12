@@ -44,9 +44,9 @@ public class CartItemService {
     }
 
     @Transactional
-    public void deleteCartItem(Long userId, Long cartItemId) {
+    public void deleteCartItem(Long userId, Long cartItemId, Long storeId) {
         // 사용자 검증
-        CartItem item = cartItemRepository.findByUserIdAndId(userId, cartItemId)
+        CartItem item = cartItemRepository.findByUserIdAndIdAndStoreIdAndDeletedAtIsNull(userId, cartItemId, storeId)
                 .orElseThrow(() -> new BusinessException(CartItemErrorCode.CART_ITEM_NOT_FOUND));
 
         // 장바구니 상품 삭제

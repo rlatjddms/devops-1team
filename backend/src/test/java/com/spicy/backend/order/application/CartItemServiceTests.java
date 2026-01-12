@@ -119,20 +119,20 @@ class CartItemServiceTests {
     @DisplayName("장바구니 상품 삭제 - 성공")
     void deleteCartItem_Success() {
         // given
-        given(cartItemRepository.findByUserIdAndId(userId, cartItem.getId())).willReturn(Optional.of(cartItem));
+        given(cartItemRepository.findByUserIdAndIdAndStoreIdAndDeletedAtIsNull(userId, cartItem.getId(), storeId)).willReturn(Optional.of(cartItem));
 
         // when & then
-        cartItemService.deleteCartItem(userId, cartItem.getId());
+        cartItemService.deleteCartItem(userId, cartItem.getId(), storeId);
     }
     @Test
     @DisplayName("장바구니 상품 삭제 - 실패 - CART_NOT_FOUND")
     void deleteCartItem_Failure_CART_NOT_FOUND() {
         // given
-        given(cartItemRepository.findByUserIdAndId(userId, cartItem.getId())).willReturn(Optional.empty());
+        given(cartItemRepository.findByUserIdAndIdAndStoreIdAndDeletedAtIsNull(userId, cartItem.getId(), storeId)).willReturn(Optional.empty());
 
         // when & then
         BusinessException exception = assertThrows(BusinessException.class, () ->
-                cartItemService.deleteCartItem(userId, cartItem.getId())
+                cartItemService.deleteCartItem(userId, cartItem.getId(), storeId)
         );
         assertEquals(CartItemErrorCode.CART_ITEM_NOT_FOUND, exception.getErrorCode());
     }
