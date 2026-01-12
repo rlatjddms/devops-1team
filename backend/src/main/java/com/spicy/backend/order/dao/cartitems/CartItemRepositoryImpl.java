@@ -21,6 +21,7 @@ public class CartItemRepositoryImpl implements CartItemRepositoryCustom {
                 .join(cartItem.product, product).fetchJoin()
                 .where(
                         cartItem.userId.eq(userId),
+                        cartItem.storeId.eq(storeId),
                         cartItem.deletedAt.isNull()
                 )
                 .fetch();
