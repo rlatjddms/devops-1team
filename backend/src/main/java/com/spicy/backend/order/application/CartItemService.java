@@ -27,20 +27,8 @@ public class CartItemService {
         // CartItem 생성 및 저장
         List<CartItem> cartItems = new ArrayList<>();
         List<Long> cartItemIdList = new ArrayList<>();
-        for (CartItemCreateRequest request : requests) {
-            CartItem cartItem = CartItem.builder()
-                    .storeId(storeId)
-                    .userId(userId)
-                    .product(
-                            productRepository.findById(request.productId())
-                                    .orElseThrow(() -> new BusinessException(GlobalErrorCode.RESOURCE_NOT_FOUND))
-                            // 나중에 에러 코드 변경해야함 PRODUCT_NOT_FOUND
-                    )
-                    .quantity(request.quantity())
-                    .build();
-            cartItems.add(cartItem);
-            cartItemIdList.add(cartItem.getId());
-        }
+
+        createCartItems(cartItems, cartItemIdList, requests, userId, storeId);
 
         cartItemRepository.saveAll(cartItems);
 
@@ -63,5 +51,28 @@ public class CartItemService {
 
         // 장바구니 상품 삭제
         cartItemRepository.delete(item);
+    }
+
+    public void createCartItems(
+            List<CartItem> cartItemList,
+            List<Long> cartItemIdList,
+            List<CartItemCreateRequest> requests,
+            Long userId,
+            Long storeId
+    ) {
+        for (CartItemCreateRequest request : requests) {
+            CartItem cartItem = CartItem.builder()
+                    .storeId(storeId)
+                    .userId(userId)
+                    .product(
+                            productRepository.findById(request.productId())
+                                    .orElseThrow(() -> new BusinessException(GlobalErrorCode.RESOURCE_NOT_FOUND))
+                            // 나중에 에러 코드 변경해야함 PRODUCT_NOT_FOUND
+                    )
+                    .quantity(request.quantity())
+                    .build();
+            cartItemList.add(cartItem);
+            cartItemIdList.add(cartItem.getId());
+        }
     }
 }
