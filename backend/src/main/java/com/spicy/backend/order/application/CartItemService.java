@@ -7,6 +7,7 @@ import com.spicy.backend.order.dao.cartitems.CartItemRepository;
 import com.spicy.backend.order.domain.CartItem;
 import com.spicy.backend.order.dto.request.CartItemCreateRequest;
 import com.spicy.backend.order.dto.response.CartItemResponse;
+import com.spicy.backend.order.error.CartItemErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,5 +53,15 @@ public class CartItemService {
         List<CartItem> cartItems = cartItemRepository.findAllByUserIdAndStoreId(userId, storeId);
 
         return CartItemResponse.from(cartItems);
+    }
+
+    @Transactional
+    public void deleteCartItem(Long userId, Long cartItemId) {
+        // 사용자 검증
+        CartItem item = cartItemRepository.findByUserIdAndId(userId, cartItemId)
+                .orElseThrow(() -> new BusinessException(CartItemErrorCode.CART_ITEM_NOT_FOUND));
+
+        // 장바구니 상품 삭제
+        cartItemRepository.delete(item);
     }
 }
