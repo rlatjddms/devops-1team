@@ -1,10 +1,13 @@
 package com.spicy.backend.order.application;
 
 import com.spicy.backend.global.error.exception.BusinessException;
+import com.spicy.backend.order.dao.cartitems.CartItemRepository;
 import com.spicy.backend.order.dao.order.OrderItemRepository;
 import com.spicy.backend.order.dao.order.OrderRepository;
+import com.spicy.backend.order.domain.CartItem;
 import com.spicy.backend.order.domain.Order;
 import com.spicy.backend.order.domain.OrderItem;
+import com.spicy.backend.order.domain.Product;
 import com.spicy.backend.order.dto.request.OrderCreateRequest;
 import com.spicy.backend.order.dto.request.OrderItemRequest;
 import com.spicy.backend.order.dto.request.wrapper.OrderAndOrderItemRequest;
@@ -46,6 +49,8 @@ class OrderServiceTests {
     private OrderRepository orderRepository;
     @Mock
     private OrderItemRepository orderItemRepository;
+    @Mock
+    private CartItemRepository cartItemRepository;
 
     private Long userId;
     private Long orderId;
@@ -53,7 +58,7 @@ class OrderServiceTests {
     private Long productId;
     private Long orderItemId;
 
-    private Integer quantity;
+    private Long quantity;
 
     private BigDecimal unitPrice;
     private BigDecimal totalPrice;
@@ -67,6 +72,10 @@ class OrderServiceTests {
 
     private OrderItem orderItem;
 
+    private CartItem cartItem;
+
+    private Product product;
+
     @BeforeEach
     void setUp() {
         userId = 1L;
@@ -75,7 +84,7 @@ class OrderServiceTests {
         productId = 1000L;
         orderItemId = 20L;
 
-        quantity = 10;
+        quantity = 10L;
 
         unitPrice = BigDecimal.valueOf(100.00);
         totalPrice = unitPrice.multiply(BigDecimal.valueOf(quantity));
@@ -103,6 +112,18 @@ class OrderServiceTests {
                 .totalPrice(unitPrice.multiply(BigDecimal.valueOf(quantity)))
                 .build();
         ReflectionTestUtils.setField(orderItem, "id", orderItemId);
+
+        product = Product.builder()
+                .price(BigDecimal.valueOf(100.00))
+                .build();
+        ReflectionTestUtils.setField(product, "productId", productId);
+
+        cartItem = CartItem.builder()
+                .storeId(storeId)
+                .userId(userId)
+                .product(product)
+                .quantity(quantity)
+                .build();
     }
 
     @Test
@@ -110,7 +131,6 @@ class OrderServiceTests {
     public void createOrder_Success() {
         // given
         OrderCreateRequest orderCreateRequest = new OrderCreateRequest(
-                storeId,
                 LocalDate.now(),
                 "address",
                 "receiverName",
@@ -125,11 +145,6 @@ class OrderServiceTests {
                         quantity,
                         unitPrice
                 )
-        );
-
-        OrderAndOrderItemRequest orderAndOrderItemRequest = new OrderAndOrderItemRequest(
-                orderCreateRequest,
-                orderItemRequestList
         );
 
         Order mockOrder = Order.builder()
@@ -147,8 +162,10 @@ class OrderServiceTests {
 
         given(orderItemRepository.saveAll(anyList())).willReturn(List.of());
 
+        given(cartItemRepository.findAllByUserIdAndStoreId(userId, storeId)).willReturn(List.of(cartItem));
+
         // when
-        OrderCreateResponse response = orderService.createOrder(userId, orderAndOrderItemRequest);
+        OrderCreateResponse response = orderService.createOrder(storeId, userId, orderCreateRequest);
 
         // then
         assertEquals(orderId, response.orderId());

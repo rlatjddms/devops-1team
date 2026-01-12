@@ -5,10 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public record OrderCreateRequest(
-        // fk: 가맹점 식별 번호
-        @NotNull
-        Long storeId,
-
         // 희망 배송지
         @NotNull
         LocalDate deliveryDate,

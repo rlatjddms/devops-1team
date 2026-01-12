@@ -76,9 +76,9 @@ public class Order extends BaseEntity {
         this.totalAmount = totalPrice;
     }
 
-    public static Order create(OrderCreateRequest request) {
+    public static Order create(OrderCreateRequest request, Long storeId) {
         return Order.builder()
-                .storeId(request.storeId())
+                .storeId(storeId)
                 .deliveryDate(request.deliveryDate())
                 .address(request.address())
                 .receiverName(request.receiverName())

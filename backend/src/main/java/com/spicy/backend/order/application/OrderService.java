@@ -51,7 +51,7 @@ public class OrderService {
         BigDecimal totalPrice = BigDecimal.ZERO;
 
         // Order 생성
-        Order order = Order.create(request);
+        Order order = Order.create(request, storeId);
 
         // orderId 받아오기 위해 먼저 저장
         order = orderRepository.save(order);
