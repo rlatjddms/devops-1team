@@ -26,7 +26,7 @@ public class DemandPlanService {
         if(stock.totalQuantity() <= stock.minimumQuantity()) {
             // 추가 주문 권장 수량 메시지 출력
             String msg = "현재 재고는 " + stock.totalQuantity() +
-                    "개 입니다. 추가 주문이 필요합니다." + createRecommendationMessage(productId);
+                    "개 입니다. 추가 주문이 필요합니다. " + createRecommendationMessage(productId);
             return new ProcessResponse(true, msg);
         }
         return new ProcessResponse(false, "");
@@ -52,7 +52,7 @@ public class DemandPlanService {
         //요약 메시지
         String prefix;
 
-        // TODO: 최근 한달 간 재고 주문 수량이 0건인 경우 로직 추가
+        // 최근 한달 간 재고 주문 수량이 0건인 경우 로직
         if(totalSales == 0) {
             recommended = DEFAULT_MIN_ORDER_COUNT;
             prefix = "최근 주문이 없습니다. ";

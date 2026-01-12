@@ -1,5 +1,6 @@
 package com.spicy.backend.demandplan.controller;
 
+import com.spicy.backend.demandplan.controller.dto.ProcessResponse;
 import com.spicy.backend.demandplan.service.DemandPlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,7 @@ public class DemandPlanController {
     private final DemandPlanService service;
 
     @GetMapping("/{productId}")
-    public String checkDemand(@PathVariable Long productId) {
+    public ProcessResponse checkDemand(@PathVariable Long productId) {
         return service.process(productId);
     }
 }
