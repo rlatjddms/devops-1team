@@ -18,7 +18,7 @@ public record OrderItemRequest(
         // 주문 수량
         @NotNull
         @Min(1)
-        Integer quantity,
+        Long quantity,
 
         // 개별 단가
         @NotNull

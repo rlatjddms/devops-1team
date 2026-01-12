@@ -2,17 +2,19 @@ package com.spicy.backend.order.application;
 
 import com.spicy.backend.global.error.errorcode.GlobalErrorCode;
 import com.spicy.backend.global.error.exception.BusinessException;
+import com.spicy.backend.order.dao.cartitems.CartItemRepository;
 import com.spicy.backend.order.dao.order.OrderItemRepository;
 import com.spicy.backend.order.dao.order.OrderRepository;
+import com.spicy.backend.order.domain.CartItem;
 import com.spicy.backend.order.domain.Order;
 import com.spicy.backend.order.domain.OrderItem;
-import com.spicy.backend.order.dto.request.OrderItemRequest;
-import com.spicy.backend.order.dto.request.wrapper.OrderAndOrderItemRequest;
+import com.spicy.backend.order.dto.request.OrderCreateRequest;
 import com.spicy.backend.order.dto.response.OrderCanceledResponse;
 import com.spicy.backend.order.dto.response.OrderCreateResponse;
 import com.spicy.backend.order.dto.response.OrderItemResponse;
 import com.spicy.backend.order.dto.response.OrderResponse;
 import com.spicy.backend.order.enums.Status;
+import com.spicy.backend.order.error.CartItemErrorCode;
 import com.spicy.backend.order.error.OrderErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final CartItemRepository cartItemRepository;
 
     /**
      * Order 및 OrderItem 생성
@@ -38,19 +41,24 @@ public class OrderService {
      * @throws BusinessException(GlobalErrorCode.INVALID_INPUT_VALUE) 유저 정보 없음
      * */
     @Transactional
-    public OrderCreateResponse createOrder(Long storeId, OrderAndOrderItemRequest request) {
+    public OrderCreateResponse createOrder(Long storeId, Long userId, OrderCreateRequest request) {
+        // 사용자 검증 및 장바구니 가져오기
+        List<CartItem> cartList = cartItemRepository.findAllByUserIdAndStoreId(userId, storeId);
+
+        if (cartList.isEmpty()) throw new BusinessException(CartItemErrorCode.CART_ITEM_NOT_FOUND);
+
         // Order totalAmount 생성
         BigDecimal totalPrice = BigDecimal.ZERO;
 
         // Order 생성
-        Order order = Order.create(request.orderCreateRequest());
+        Order order = Order.create(request);
 
         // orderId 받아오기 위해 먼저 저장
         order = orderRepository.save(order);
 
         // OrderItem 생성
         List<OrderItem> itemList = new ArrayList<>();
-        for (OrderItemRequest item : request.orderItemRequestList()) {
+        for (CartItem item : cartList) {
             OrderItem orderItem = OrderItem.create(item);
             orderItem.updateOrderId(order.getId());
 
@@ -64,6 +72,9 @@ public class OrderService {
 
         // OrderItem 저장
         orderItemRepository.saveAll(itemList);
+
+        // 장바구니에서 삭제
+        cartItemRepository.deleteAll(cartList);
 
         return OrderCreateResponse.from(order.getId());
     }

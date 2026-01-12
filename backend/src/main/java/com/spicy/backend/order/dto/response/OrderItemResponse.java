@@ -8,7 +8,7 @@ import java.util.List;
 public record OrderItemResponse(
         String productName,
 
-        Integer quantity,
+        Long quantity,
 
         BigDecimal unitPrice,
 

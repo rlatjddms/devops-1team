@@ -2,7 +2,7 @@ package com.spicy.backend.order.api;
 
 import com.spicy.backend.global.common.ApiResponse;
 import com.spicy.backend.order.application.OrderService;
-import com.spicy.backend.order.dto.request.wrapper.OrderAndOrderItemRequest;
+import com.spicy.backend.order.dto.request.OrderCreateRequest;
 import com.spicy.backend.order.dto.response.OrderCanceledResponse;
 import com.spicy.backend.order.dto.response.OrderCreateResponse;
 import com.spicy.backend.order.dto.response.OrderItemResponse;
@@ -30,13 +30,13 @@ public class OrderController {
 
     // 주문 생성
     @Operation(summary = "주문 생성", description = "가맹점주로부터 데이터를 전달받아 주문 생성")
-    @PostMapping("/{store-id}")
+    @PostMapping("/{user-id}/{store-id}")
     public ResponseEntity<ApiResponse<OrderCreateResponse>> createOrder(
+            @PathVariable("user-id") Long userId,
             @PathVariable("store-id") Long storeId,   // 가맹점 식별 번호
-            @RequestBody OrderAndOrderItemRequest request
+            @RequestBody OrderCreateRequest request
     ) {
-        // storeId로 사용자 검증 필요
-        return ResponseEntity.ok(ApiResponse.success(orderService.createOrder(storeId, request)));
+        return ResponseEntity.ok(ApiResponse.success(orderService.createOrder(storeId, userId, request)));
     }
 
     // 주문 조회
