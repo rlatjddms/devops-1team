@@ -49,7 +49,7 @@ public interface InventoryRepository extends JpaRepository<Inventory,Long> {
     @Query("""
     select i
     from Inventory i
-    where i.productId = :id and i.expirationDate >= :targetDate
+    where i.productId = :id and i.expirationDate >= :targetDate and i.status = 'ACTIVE'
 """)
     List<Inventory> findValidProducts(@Param("id") Long id, @Param("targetDate") LocalDate targetDate);
 
