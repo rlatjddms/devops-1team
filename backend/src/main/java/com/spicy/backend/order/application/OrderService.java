@@ -38,7 +38,7 @@ public class OrderService {
      * @throws BusinessException(GlobalErrorCode.INVALID_INPUT_VALUE) 유저 정보 없음
      * */
     @Transactional
-    public OrderCreateResponse createOrder(Long userId, OrderAndOrderItemRequest request) {
+    public OrderCreateResponse createOrder(Long storeId, OrderAndOrderItemRequest request) {
         // Order totalAmount 생성
         BigDecimal totalPrice = BigDecimal.ZERO;
 

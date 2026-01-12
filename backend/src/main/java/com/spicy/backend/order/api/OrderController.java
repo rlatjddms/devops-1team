@@ -30,12 +30,13 @@ public class OrderController {
 
     // 주문 생성
     @Operation(summary = "주문 생성", description = "가맹점주로부터 데이터를 전달받아 주문 생성")
-    @PostMapping("/{user-id}")
+    @PostMapping("/{store-id}")
     public ResponseEntity<ApiResponse<OrderCreateResponse>> createOrder(
-            @PathVariable("user-id") Long userId,   // 가맹점주
+            @PathVariable("store-id") Long storeId,   // 가맹점 식별 번호
             @RequestBody OrderAndOrderItemRequest request
     ) {
-        return ResponseEntity.ok(ApiResponse.success(orderService.createOrder(userId, request)));
+        // storeId로 사용자 검증 필요
+        return ResponseEntity.ok(ApiResponse.success(orderService.createOrder(storeId, request)));
     }
 
     // 주문 조회
