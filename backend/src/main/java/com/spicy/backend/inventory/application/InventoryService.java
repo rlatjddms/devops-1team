@@ -66,6 +66,7 @@ public class InventoryService {
         List<ProductSummaryResponse> productSummaries = new ArrayList<>();
 
         // productSummaries에 넣을 기본 값 가져오기 (여러 번 DB에 참조하는 것을 방지)
+        // 가맹점 늘어날 시 Request로 가맹점 ID를 받아야 할 예정
         List<ProductBaseInfo> baseInfos = inventoryRepository.findAllProductBaseInfo();
 
         // 기본 값 해쉬맵 생성
@@ -79,6 +80,10 @@ public class InventoryService {
             Long id = entry.getKey();
             //id에 알맞은 기본 정보를 꺼내옴
             ProductBaseInfo productBaseInfo = baseInfoMap.get(id);
+
+            if (productBaseInfo == null) {
+                throw new BusinessException(InventoryErrorCode.PRODUCT_NOT_FOUND);
+            }
             // 총 수량 계산
             int totalQuantity = 0;
             for (InventoryLotResponse inventoryLotResponse : entry.getValue()) {
@@ -111,7 +116,8 @@ public class InventoryService {
             throw new BusinessException(InventoryErrorCode.PRODUCT_NOT_FOUND);
         }
         // 해당하는 상품 최소 수량 가져오기(지금은 가맹점 하나로 치므로 1L로 고정)
-        MinimumProduct minimumProducts = minimumProductRepository.findByProductIdAndStoreId(id,DEFAULT_STORE_ID);
+        MinimumProduct minimumProducts = minimumProductRepository.findByProductIdAndStoreId(id,DEFAULT_STORE_ID)
+                .orElseThrow(() -> new BusinessException(InventoryErrorCode.PRODUCT_NOT_FOUND));
         List<InventoryLotResponse> productLotResponses = new ArrayList<>();
         int totalQuantity = 0;
 
@@ -143,7 +149,8 @@ public class InventoryService {
         }
         Long id = inventories.stream().findFirst().get().getProductId();
         // 해당하는 상품 최소 수량 가져오기(지금은 가맹점 하나로 치므로 1L로 고정)
-        MinimumProduct minimumProducts = minimumProductRepository.findByProductIdAndStoreId(id,DEFAULT_STORE_ID);
+        MinimumProduct minimumProducts = minimumProductRepository.findByProductIdAndStoreId(id,DEFAULT_STORE_ID)
+                .orElseThrow(() -> new BusinessException(InventoryErrorCode.PRODUCT_NOT_FOUND));
         List<InventoryLotResponse> productLotResponses = new ArrayList<>();
         int totalQuantity = 0;
 
@@ -187,7 +194,7 @@ public class InventoryService {
 
     public Void outbound(@Valid InventoryOutboundRequest request) {
         int count = request.quantity();
-        LocalDate targetDate = LocalDate.now().plusDays(request.monthsUntilExpiration());
+        LocalDate targetDate = LocalDate.now().plusMonths(request.monthsUntilExpiration());
 
         List<Inventory> inventories = inventoryRepository.findValidProducts(request.id(), targetDate);
 
@@ -202,12 +209,13 @@ public class InventoryService {
                 count -= available;
             }
         }
-        inventoryRepository.saveAll(inventories);
 
         // 재고 부족 시 예외 발생
         if (count > 0) {
             throw new BusinessException(InventoryErrorCode.OUT_OF_STOCK);
         }
+
+        inventoryRepository.saveAll(inventories);
 
         return null;
     }
