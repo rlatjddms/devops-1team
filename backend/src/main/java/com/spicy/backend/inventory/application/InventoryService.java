@@ -196,7 +196,7 @@ public class InventoryService {
         int count = request.quantity();
         LocalDate targetDate = LocalDate.now().plusMonths(request.monthsUntilExpiration());
 
-        List<Inventory> inventories = inventoryRepository.findValidProducts(request.id(), targetDate);
+        List<Inventory> inventories = inventoryRepository.findValidProductsWithLock(request.id(), targetDate);
 
         for (Inventory inventory : inventories) {
             int available = inventory.getQuantity();

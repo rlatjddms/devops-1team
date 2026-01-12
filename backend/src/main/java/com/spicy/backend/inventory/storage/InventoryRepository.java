@@ -3,7 +3,9 @@ package com.spicy.backend.inventory.storage;
 import com.spicy.backend.inventory.domain.Inventory;
 import com.spicy.backend.inventory.dto.response.InventoryLotResponse;
 import com.spicy.backend.inventory.dto.response.ProductBaseInfo;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -46,12 +48,19 @@ public interface InventoryRepository extends JpaRepository<Inventory,Long> {
 
     Optional<Inventory> findFirstByProductIdOrderByIdAsc(Long productId);
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
     select i
     from Inventory i
-    where i.productId = :id and i.expirationDate >= :targetDate and i.status = 'ACTIVE'
+    where i.productId = :productId
+      and i.expirationDate >= :targetDate
+      and i.status = 'ACTIVE'
+    order by i.expirationDate asc
 """)
-    List<Inventory> findValidProducts(@Param("id") Long id, @Param("targetDate") LocalDate targetDate);
+    List<Inventory> findValidProductsWithLock(
+            @Param("productId") Long productId,
+            @Param("targetDate") LocalDate targetDate
+    );
 
     @Query("select i from Inventory i where i.expirationDate < :today AND i.status = 'ACTIVE'")
     List<Inventory> findExpiredInventories(@Param("today")LocalDate today);
