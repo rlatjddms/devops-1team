@@ -15,11 +15,14 @@ public class CartItemRepositoryImpl implements CartItemRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<CartItem> findAllByUserIdAndStoreId(Long userId, Long storeId) {
+    public List<CartItem> findAllByUserIdAndStoreIdAndDeletedAtIsNull(Long userId, Long storeId) {
         return queryFactory
                 .selectFrom(cartItem)
                 .join(cartItem.product, product).fetchJoin()
-                .where(cartItem.userId.eq(userId))
+                .where(
+                        cartItem.userId.eq(userId),
+                        cartItem.deletedAt.isNull()
+                )
                 .fetch();
     }
 }
