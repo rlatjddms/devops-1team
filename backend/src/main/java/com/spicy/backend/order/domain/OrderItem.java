@@ -70,7 +70,7 @@ public class OrderItem extends BaseEntity {
     }
 
     public void updateOrderId(Long id) {
-        if (id == null && id == 0) {
+        if (id == null || id == 0) {
             throw new BusinessException(GlobalErrorCode.INVALID_INPUT_VALUE);
         }
         this.orderId = id;
