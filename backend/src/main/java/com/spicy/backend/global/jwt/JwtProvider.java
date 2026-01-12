@@ -65,6 +65,8 @@ public class JwtProvider {
         try {
             Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
             return true;
+        } catch (SecurityException e) {
+            log.error("JWT 서명 검증에 실패했습니다.", e);
         } catch (ExpiredJwtException e) {
             log.error("만료된 JWT 토큰입니다.");
         } catch (UnsupportedJwtException e) {
