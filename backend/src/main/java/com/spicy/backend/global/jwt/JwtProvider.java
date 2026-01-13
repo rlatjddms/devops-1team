@@ -98,6 +98,15 @@ public class JwtProvider {
                 .getPayload();
 
         String roleName = claims.get("role", String.class);
-        return UserRole.valueOf(roleName);
+
+        if (roleName == null || roleName.isBlank()) {
+            return null;
+        }
+
+        try {
+            return UserRole.valueOf(roleName);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 }
