@@ -1,7 +1,9 @@
 package com.spicy.backend.demandplan.adapter;
 
 import com.spicy.backend.demandplan.controller.dto.StockResponseDto;
+import com.spicy.backend.demandplan.error.DemandPlanErrorCode;
 import com.spicy.backend.demandplan.service.ExternalDataFetcher;
+import com.spicy.backend.global.error.exception.BusinessException;
 import com.spicy.backend.inventory.application.InventoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,7 +22,7 @@ public class ExternalDataFetcherImpl implements ExternalDataFetcher {
         var inventoryData = inventoryService.searchProduct(productId);
 
         if(inventoryData == null) {
-            throw new RuntimeException("상품을 조회할 수 없습니다.");
+            throw new BusinessException(DemandPlanErrorCode.FAILED_TO_FETCH_PRODUCTS);
         }
 
         return new StockResponseDto(
