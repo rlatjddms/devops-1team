@@ -1,6 +1,6 @@
 package com.spicy.backend.demandplan.service;
 
-import com.spicy.backend.demandplan.controller.dto.StockResponseDto;
+import com.spicy.backend.demandplan.controller.dto.response.StockResponseDto;
 
 import java.util.List;
 
