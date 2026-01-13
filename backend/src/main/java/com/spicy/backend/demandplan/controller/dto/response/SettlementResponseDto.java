@@ -1,4 +1,4 @@
-package com.spicy.backend.demandplan.controller.dto;
+package com.spicy.backend.demandplan.controller.dto.response;
 
 import java.time.LocalDate;
 

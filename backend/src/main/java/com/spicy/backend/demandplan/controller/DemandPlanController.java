@@ -1,6 +1,6 @@
 package com.spicy.backend.demandplan.controller;
 
-import com.spicy.backend.demandplan.controller.dto.ProcessResponse;
+import com.spicy.backend.demandplan.controller.dto.response.ProcessResponse;
 import com.spicy.backend.demandplan.service.DemandPlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

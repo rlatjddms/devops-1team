@@ -1,4 +1,4 @@
-package com.spicy.backend.demandplan.controller.dto;
+package com.spicy.backend.demandplan.controller.dto.response;
 
 public record ProcessResponse(
         boolean isOrderRequired,    // 주문 필요 여부
