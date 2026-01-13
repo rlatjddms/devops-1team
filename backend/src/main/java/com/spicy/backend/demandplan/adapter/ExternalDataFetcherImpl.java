@@ -33,7 +33,7 @@ public class ExternalDataFetcherImpl implements ExternalDataFetcher {
     }
 
     @Override
-    public List<Integer> getRecentOrderCount(Long productId) {
+    public List<Integer> getRecentOrderCount(Long productId, int month) {
         // TODO: Settlement 서비스 코드 구현시 작성 예정
         return List.of();
     }

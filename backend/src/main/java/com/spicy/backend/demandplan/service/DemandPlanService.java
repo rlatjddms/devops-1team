@@ -1,5 +1,6 @@
 package com.spicy.backend.demandplan.service;
 
+import ch.qos.logback.classic.Logger;
 import com.spicy.backend.demandplan.error.DemandPlanErrorCode;
 import com.spicy.backend.demandplan.controller.dto.ProcessResponse;
 import com.spicy.backend.demandplan.controller.dto.StockResponseDto;
@@ -35,11 +36,14 @@ public class DemandPlanService {
     private String createRecommendationMessage(Long productId) {
 
         // 최근 한달 간 재고 파악 후 권장 수량 계산 로직
-        List<Integer> sales = infoProvider.getRecentOrderCount(productId);
+        List<Integer> sales = infoProvider.getRecentOrderCount(productId, 1);
 
         // sales 리스트 null 체크 로직
-        if(sales.isEmpty()) {
-            throw new BusinessException(DemandPlanErrorCode.FAILED_TO_FETCH_SALES);
+        if(sales.isEmpty() || sales == null) {
+
+            // 기간을 늘려 재탐색
+            sales = infoProvider.getRecentOrderCount(productId, 3);
+
         }
 
         // 최근 기간 총 재고 주문 수량
