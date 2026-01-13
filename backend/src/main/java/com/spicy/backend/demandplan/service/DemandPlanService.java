@@ -36,7 +36,7 @@ public class DemandPlanService {
         List<Integer> sales = infoProvider.getRecentOrderCount(productId, 1);
 
         // sales 리스트 null 체크 로직
-        if(sales.isEmpty() || sales == null) {
+        if(sales == null || sales.isEmpty()) {
 
             // 기간을 늘려 재탐색
             sales = infoProvider.getRecentOrderCount(productId, 3);
