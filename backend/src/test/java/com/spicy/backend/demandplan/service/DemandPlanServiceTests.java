@@ -1,9 +1,7 @@
 package com.spicy.backend.demandplan.service;
 
-import com.spicy.backend.demandplan.controller.dto.ProcessResponse;
-import com.spicy.backend.demandplan.controller.dto.StockResponseDto;
-import com.spicy.backend.demandplan.error.DemandPlanErrorCode;
-import com.spicy.backend.global.error.exception.BusinessException;
+import com.spicy.backend.demandplan.controller.dto.response.ProcessResponse;
+import com.spicy.backend.demandplan.controller.dto.response.StockResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
