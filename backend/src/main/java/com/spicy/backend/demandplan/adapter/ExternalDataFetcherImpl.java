@@ -48,7 +48,7 @@ public class ExternalDataFetcherImpl implements ExternalDataFetcher {
         List<Integer> result = new ArrayList<>();
         LocalDate today = LocalDate.now();
 
-        for (int i = RECENT_DAYS - 1; i >= 0; i--) {
+        for (int i = RECENT_DAYS * month - 1; i >= 0; i--) {
             LocalDate targetDate = today.minusDays(i);
 
             try {
