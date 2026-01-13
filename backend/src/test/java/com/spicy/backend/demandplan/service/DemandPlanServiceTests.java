@@ -102,7 +102,7 @@ class DemandPlanServiceTests {
 
     @Test
     @DisplayName("최근 판매 내역이 비어있는 경우")
-    void shouldThrowExceptionWhenSalesHistoryIsEmpty() {
+    void shouldVerifyIsEmptyAndReturnDefaultOrderCount() {
 
         // given (재고 부족 및 최근 판매 내역 비어 있도록 설정)
         Long productId = 1L;
