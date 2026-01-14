@@ -125,7 +125,7 @@ public class SettlementService {
     }
 
 
-    public Integer getDailyOrders(Long productId, int term) {
+    public Integer getOrderCountInTerm(Long productId, int term) {
 
         LocalDate endDate = LocalDate.now();
         LocalDate startDate = endDate.minusDays(term);

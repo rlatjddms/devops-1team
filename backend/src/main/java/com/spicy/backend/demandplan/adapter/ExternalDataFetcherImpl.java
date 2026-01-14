@@ -41,6 +41,6 @@ public class ExternalDataFetcherImpl implements ExternalDataFetcher {
     public Integer getRecentOrderCount(Long productId, int month) {
         // 기간 설정
         int term = RECENT_DAYS * month - 1;
-        return settlementService.getDailyOrders(productId, term);
+        return settlementService.getOrderCountInTerm(productId, term);
     }
 }
