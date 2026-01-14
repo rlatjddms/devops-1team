@@ -24,6 +24,7 @@ const loadProducts = async () => {
   error.value = null;
   try {
     const data = await inventoryApi.getAllProducts();
+    console.log('Loaded products:', data);
     products.value = data || [];
   } catch (err) {
     error.value = `데이터를 불러올 수 없습니다: ${err.message}`;
@@ -55,7 +56,8 @@ const openDetail = async (id) => {
     selectedProduct.value = detail;
     viewMode.value = 'detail';
   } catch (err) {
-    alert('상품 상세 정보를 가져오는데 실패했습니다.');
+    console.error(err);
+    alert(`상품 상세 정보를 가져오는데 실패했습니다: ${err.message}`);
   } finally {
     loading.value = false;
   }

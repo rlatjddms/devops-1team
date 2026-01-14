@@ -60,7 +60,7 @@ const handleSearch = (e) => {
           </div>
 
           <div class="card-footer">
-            <div class="p-price">₩{{ p.price.toLocaleString() }}</div>
+            <div class="p-price">₩{{ p.price?.toLocaleString() || '0' }}</div>
             <button class="detail-link">🔍 상세보기</button>
           </div>
         </div>

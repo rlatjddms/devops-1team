@@ -40,14 +40,16 @@ export const inventoryApi = {
         }
     },
 
-    // 상품 상세 조회 (ID)
     async searchProduct(id) {
         try {
             const response = await fetch(`${BASE_URL}/${id}`, {
                 method: 'GET',
                 headers: getHeaders(),
             });
-            if (!response.ok) throw new Error('Network response was not ok');
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`Detail fetch failed: ${response.status} ${text}`);
+            }
             const data = await response.json();
             return data.data;
         } catch (error) {
@@ -101,6 +103,25 @@ export const inventoryApi = {
         } catch (error) {
             console.error('Error during outbound:', error);
             throw error;
+        }
+    },
+
+    // 안전재고/수요예측 확인
+    async checkDemand(productId) {
+        try {
+            const response = await fetch(`/api/v1/demand-plan/${productId}`, {
+                method: 'GET',
+                headers: getHeaders(),
+            });
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`Demand fetch failed: [${response.status}] ${text}`);
+            }
+            const data = await response.json();
+            return data.data; // Returns { isOrderRequired, message }
+        } catch (error) {
+            console.error(`Error checking demand for product ${productId}:`, error);
+            throw error; // Let the component handle/display the specific error
         }
     }
 };

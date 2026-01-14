@@ -1,7 +1,34 @@
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, ref, watch, onMounted } from 'vue';
+import { inventoryApi } from '../api/inventoryApi';
+
 const props = defineProps({ product: { type: Object, required: true } });
 const emit = defineEmits(['back', 'request-inbound']);
+
+const demandInfo = ref(null);
+const demandError = ref(null);
+const demandLoading = ref(false);
+
+const checkSafetyStock = async () => {
+  if (!props.product?.productId) return;
+  demandLoading.value = true;
+  demandError.value = null;
+  console.log('Checking safety stock for product: ' + props.product.productId);
+  try {
+    const data = await inventoryApi.checkDemand(props.product.productId);
+    console.log('Safety Stock Data:', data);
+    demandInfo.value = data;
+    if (!data) demandError.value = "Data is null (API failed?)";
+  } catch (e) {
+    console.error('Safety stock check failed:', e);
+    demandError.value = e.message;
+  } finally {
+    demandLoading.value = false;
+  }
+};
+
+onMounted(checkSafetyStock);
+watch(() => props.product, checkSafetyStock);
 </script>
 
 <template>
@@ -10,6 +37,22 @@ const emit = defineEmits(['back', 'request-inbound']);
       <button class="back-link" @click="$emit('back')">◀ 주방 목록으로 돌아가기</button>
       <button class="btn-spicy refill-btn" @click="$emit('request-inbound', product.productName)">
         🌶️ 재고 채우기
+      </button>
+    </div>
+
+    <!-- Debug Section -->
+    <div v-if="demandError" class="debug-box error">⚠️ 에러: {{ demandError }}</div>
+    <div v-if="demandLoading" class="debug-box">⏳ 안전재고 확인 중...</div>
+
+    <!-- Alert Section -->
+    <div v-if="demandInfo && demandInfo.isOrderRequired" class="spicy-alert">
+      <div class="alert-icon">🚨</div>
+      <div class="alert-content">
+        <h3>{{ demandInfo.message }}</h3>
+        <p>지금 바로 입고가 필요합니다! 셰프님, 재료가 떨어져가요!</p>
+      </div>
+      <button class="btn-alert-action" @click="$emit('request-inbound', product.productName)">
+        바로 주문하기 📦
       </button>
     </div>
 
@@ -33,7 +76,7 @@ const emit = defineEmits(['back', 'request-inbound']);
         </div>
         <div class="stat-pill price-pill">
           <label>개당 가격</label>
-          <div class="val">₩{{ product.price.toLocaleString() }}</div>
+          <div class="val">₩{{ product.price?.toLocaleString() || '0' }}</div>
         </div>
       </div>
     </div>
@@ -170,4 +213,61 @@ h1 { font-size: 3.5rem; font-weight: 950; color: var(--deep-brown); margin: 0; l
 .expiry { color: var(--sauce-orange); }
 
 .empty-lots { text-align: center; padding: 5rem; background: white; border-radius: 24px; color: var(--text-muted); font-weight: 700; border: 2px dashed var(--border-color); }
+
+.spicy-alert {
+  background: #fff1f2;
+  border: 3px solid #e11d48;
+  border-radius: 24px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.alert-icon { font-size: 2.5rem; }
+
+.alert-content { flex: 1; }
+.alert-content h3 { color: #e11d48; font-size: 1.25rem; font-weight: 900; margin: 0 0 0.25rem 0; }
+.alert-content p { color: #9f1239; font-weight: 700; margin: 0; }
+
+.btn-alert-action {
+  background: #e11d48;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #9f1239;
+  transition: all 0.1s;
+}
+
+.btn-alert-action:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #9f1239;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+
+.debug-box {
+  background: #f3f4f6;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+}
+.debug-box.error {
+  color: red;
+  background: #fee2e2;
+  border-color: red;
+}
 </style>
