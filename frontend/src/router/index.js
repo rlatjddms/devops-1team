@@ -21,42 +21,53 @@ const router = createRouter({
         {
             path: '/inventory',
             name: 'inventory',
-            component: InventoryPage
+            component: InventoryPage,
+            meta: { requiresAuth: true }
         },
         {
             path: '/login',
             name: 'login',
-            component: LoginView
+            component: LoginView,
+            meta: { guestOnly: true }
         },
         {
             path: '/signup',
             name: 'signup',
-            component: SignupView
+            component: SignupView,
+            meta: { guestOnly: true }
         },
         {
             path: '/profile',
             name: 'profile',
-            component: ProfileView
+            component: ProfileView,
+            meta: { requiresAuth: true }
         },
         {
             path: '/admin/search',
             name: 'admin-search',
-            component: AdminUserView
+            component: AdminUserView,
+            meta: {
+                requiresAuth: true,
+                roles: ['ADMIN']
+            }
         },
         {
             path: '/products',
             name: 'products',
-            component: ProductListView
+            component: ProductListView,
+            meta: { requiresAuth: true }
         },
         {
             path: '/cart',
             name: 'cart',
-            component: CartListView
+            component: CartListView,
+            meta: { requiresAuth: true }
         },
         {
             path: '/orders',
             name: 'orders',
-            component: OrderListView
+            component: OrderListView,
+            meta: { requiresAuth: true }
         }
     ]
 })
