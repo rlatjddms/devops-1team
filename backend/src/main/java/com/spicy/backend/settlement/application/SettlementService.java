@@ -123,4 +123,13 @@ public class SettlementService {
 
         settlementRepository.save(settlement);
     }
+
+
+    public Integer getDailyOrders(Long productId, int term) {
+
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate = endDate.minusDays(term);
+
+        return settlementRepository.getTotalQuantity(productId, startDate, endDate);
+    }
 }
