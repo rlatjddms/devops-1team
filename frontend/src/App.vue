@@ -20,6 +20,10 @@ const checkLoginStatus = async () => {
         if (res.success) {
           userRole.value = res.data.userRole; 
           userName.value = res.data.username;
+        } else {
+          userRole.value = '';
+          userName.value = '';
+          console.warn('getMe failed:', res.error);
         }
       } catch (e) {
         console.error('Failed to fetch user info', e);
