@@ -1,5 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import InventoryPage from '../features/inventory/pages/InventoryPage.vue'
+import LoginView from '../features/user/LoginView.vue'
+import SignupView from '../features/user/SignupView.vue'
+import ProfileView from '../features/user/ProfileView.vue'
+import AdminUserView from '../features/user/AdminUserView.vue'
 import ProductListView from '../features/order/ProductListView.vue'
 import CartListView from '../features/order/CartListView.vue'
 import OrderListView from '../features/order/OrderListView.vue'
@@ -18,6 +22,26 @@ const router = createRouter({
             path: '/inventory',
             name: 'inventory',
             component: InventoryPage
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: LoginView
+        },
+        {
+            path: '/signup',
+            name: 'signup',
+            component: SignupView
+        },
+        {
+            path: '/profile',
+            name: 'profile',
+            component: ProfileView
+        },
+        {
+            path: '/admin/search',
+            name: 'admin-search',
+            component: AdminUserView
         },
         {
             path: '/products',
