@@ -67,7 +67,7 @@ class DemandPlanServiceTests {
         // 재고 가져오도록 설정
         given(infoProvider.getStock(productId)).willReturn(mockStock);
         // 판매 내역 생성(10)
-        given(infoProvider.getRecentOrderCount(productId, 1)).willReturn(List.of(79));
+        given(infoProvider.getRecentOrderCount(productId, 1)).willReturn(79);
 
         // when (실행)
         ProcessResponse processResponse = demandPlanService.process(productId);
@@ -79,26 +79,6 @@ class DemandPlanServiceTests {
     }
 
     @Test
-    @DisplayName("최근 재고 주문 내역이 0인 경우")
-    void shouldReturnDefaultOrderCount() {
-
-        // given (준비)
-        Long productId = 1L;
-        StockResponseDto stock = new StockResponseDto("밀떡", new BigDecimal("1000"), 10, 5, List.of());
-
-        given(infoProvider.getStock(productId)).willReturn(stock);
-        given(infoProvider.getRecentOrderCount(productId,1)).willReturn(List.of(0));
-        given(infoProvider.getRecentOrderCount(productId,3)).willReturn(List.of(0));
-
-        // when & then (실행 및 결과 확인)
-        ProcessResponse processResponse = demandPlanService.process(productId);
-
-        assertThat(processResponse.isOrderRequired()).isTrue();
-        assertThat(processResponse.message()).contains("최근 주문이 없습니다.");
-        System.out.println("결과 메시지: " + processResponse.message());
-    }
-
-    @Test
     @DisplayName("최근 판매 내역이 비어있는 경우")
     void shouldVerifyIsEmptyAndReturnDefaultOrderCount() {
 
@@ -107,8 +87,8 @@ class DemandPlanServiceTests {
         StockResponseDto stock = new StockResponseDto("밀떡", new BigDecimal("1000"), 10, 5, List.of());
 
         given(infoProvider.getStock(productId)).willReturn(stock);
-        given(infoProvider.getRecentOrderCount(productId, 1)).willReturn(List.of());
-        given(infoProvider.getRecentOrderCount(productId, 3)).willReturn(List.of());
+        given(infoProvider.getRecentOrderCount(productId, 1)).willReturn(0);
+        given(infoProvider.getRecentOrderCount(productId, 3)).willReturn(0);
 
         // when & then (실행 및 결과 확인)
         ProcessResponse processResponse = demandPlanService.process(productId);
