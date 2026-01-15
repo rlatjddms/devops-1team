@@ -41,7 +41,8 @@ class SettlementServiceTests {
         // given
         Long storeId = 1L;
         LocalDate date = LocalDate.of(2026, 1, 10);
-        DailySettlementRequest request = new DailySettlementRequest(storeId, date);
+        Long productId = 1L;
+        DailySettlementRequest request = new DailySettlementRequest(storeId, productId, date);
 
         Settlement daily = createSettlement(date, "10000");
         List<Settlement> monthlyList = List.of(
@@ -117,7 +118,8 @@ class SettlementServiceTests {
         // given
         Long storeId = 1L;
         LocalDate date = LocalDate.of(2026, 1, 30); // 없는 날짜 가정
-        DailySettlementRequest request = new DailySettlementRequest(storeId, date);
+        Long productId = 1L;
+        DailySettlementRequest request = new DailySettlementRequest(storeId, productId, date);
 
         // Mock: 리포지토리가 "데이터 없음(Empty)"을 반환한다고 설정
         given(settlementRepository.findByStoreIdAndSettlementDate(storeId, date))
