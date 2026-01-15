@@ -40,6 +40,9 @@ public class ExternalDataFetcherImpl implements ExternalDataFetcher {
     @Override
     public Integer getRecentOrderCount(Long productId, int month) {
         // 기간 설정
+        if(month < 0 || month > 12) {
+            throw new BusinessException(DemandPlanErrorCode.NOT_VALID_TERM);
+        }
         int term = RECENT_DAYS * month - 1;
         return settlementService.getOrderCountInTerm(productId, term);
     }

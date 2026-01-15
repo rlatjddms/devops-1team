@@ -33,12 +33,14 @@ public class DemandPlanService {
     private String createRecommendationMessage(Long productId) {
 
         // 최근 한달 간 재고 파악 후 권장 수량 계산 로직
-        Integer sales = infoProvider.getRecentOrderCount(productId, 1);
+        Integer salesObj = infoProvider.getRecentOrderCount(productId, 1);
+        int sales = (salesObj == null) ? 0 : Math.max(0, salesObj);
 
         // sales 리스트 null 체크 로직
         if(sales == 0) {
             // 기간을 늘려 재탐색
-            sales = infoProvider.getRecentOrderCount(productId, 3);
+            Integer salesExtendedObj = infoProvider.getRecentOrderCount(productId, 3);
+            sales = (salesExtendedObj == null) ? 0 : Math.max(0, salesExtendedObj);
         }
 
         // 추천 수량
