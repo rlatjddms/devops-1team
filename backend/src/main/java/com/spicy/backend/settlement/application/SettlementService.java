@@ -28,7 +28,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class SettlementService {
 
-
     private final SettlementRepository settlementRepository;
     private final OrderRepository orderRepository;
 
