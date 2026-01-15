@@ -50,6 +50,7 @@ public class SettlementService {
                 .orderCount(daily.getOrderCount())
                 .dailyAmount(daily.getTotalOrderAmount())
                 .monthlyAccumulatedAmount(accumulatedAmount)
+                .productId(daily.getProductId())
                 .build();
     }
 
