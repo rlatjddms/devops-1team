@@ -78,6 +78,7 @@ public class SettlementService {
                         .settlementAmount(totalSettle)
                         .status(s.getStatus())
                         .payoutDate(s.getPayoutDate())
+                        .productId(s.getProductId())
                         .build())
                 .orElse(MonthlySettlementResponse.builder()
                         .totalAmount(BigDecimal.ZERO)
@@ -85,6 +86,7 @@ public class SettlementService {
                         .settlementAmount(BigDecimal.ZERO)
                         .status(null)
                         .payoutDate(null)
+                        .productId(null)
                         .build());
     }
 
