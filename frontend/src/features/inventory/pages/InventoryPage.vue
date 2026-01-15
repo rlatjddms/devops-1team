@@ -1,10 +1,13 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { inventoryApi } from '../api/inventoryApi';
 import InventoryList from '../components/InventoryList.vue';
 import InventoryDetail from '../components/InventoryDetail.vue';
 import InboundModal from '../components/InboundModal.vue';
 import OutboundModal from '../components/OutboundModal.vue';
+
+const router = useRouter();
 
 // State
 const viewMode = ref('list'); 
@@ -109,12 +112,8 @@ const handleOutboundConfirm = async (data) => {
   }
 };
 
-const handleLogout = () => {
-  // Placeholder for future logout logic (e.g., clearing tokens)
-  if (confirm('정말 주방에서 퇴근하시겠습니까? 👩‍🍳')) {
-    alert('로그아웃되었습니다. 다음에 또 만나요!');
-    // router.push('/login') // Later: redirect to login
-  }
+const goToProductOrder = () => {
+  router.push('/products');
 };
 
 onMounted(loadProducts);
@@ -122,19 +121,6 @@ onMounted(loadProducts);
 
 <template>
   <div class="tteokbokki-app">
-    <nav class="tteok-nav">
-      <div class="nav-container">
-        <div class="brand">
-          <span class="brand-icon">🌶️</span>
-          <h1 class="brand-name">SPICY</h1>
-        </div>
-        <div class="nav-links">
-          <span class="user-info">어서오세요, 셰프님! 👩‍🍳</span>
-          <button class="logout-btn" @click="handleLogout">퇴근하기</button>
-        </div>
-      </div>
-    </nav>
-
     <header class="tteok-header">
       <div class="header-card premium-card">
         <h2>실시간 주방 현황</h2>
@@ -154,7 +140,7 @@ onMounted(loadProducts);
           :products="products" 
           :loading="loading"
           @view-detail="openDetail"
-          @request-inbound="openInboundRequest"
+          @request-inbound="goToProductOrder"
           @request-outbound="openOutboundRequest"
           @search="handleSearch"
         />
@@ -189,76 +175,6 @@ onMounted(loadProducts);
 .tteokbokki-app {
   min-height: 100vh;
   background-color: var(--rice-cream);
-}
-
-.tteok-nav {
-  background-color: #ffffff;
-  border-bottom: 4px solid var(--border-color);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.nav-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.brand-icon {
-  font-size: 1.75rem;
-  filter: drop-shadow(0 2px 4px rgba(225, 29, 72, 0.2));
-}
-
-.brand-name {
-  font-size: 1.5rem;
-  font-weight: 900;
-  color: var(--deep-brown);
-  margin: 0;
-  letter-spacing: -0.05em;
-}
-
-.brand-name span {
-  color: var(--spicy-red);
-}
-
-.user-info {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  font-weight: 700;
-  background: var(--rice-cream);
-  padding: 0.4rem 1.2rem;
-  border-radius: 99px 0 0 99px;
-  border: 1px solid var(--border-color);
-  border-right: none;
-}
-
-.logout-btn {
-  font-size: 0.9rem;
-  font-weight: 800;
-  color: #ffffff;
-  background: var(--text-muted);
-  padding: 0.4rem 1.2rem;
-  border-top: 1px solid var(--text-muted);
-  border-bottom: 1px solid var(--text-muted);
-  border-left: none;
-  border-right: 1px solid var(--text-muted);
-  border-radius: 0 99px 99px 0;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.logout-btn:hover {
-  background: var(--deep-brown);
 }
 
 .tteok-header {
