@@ -89,7 +89,7 @@ public class SettlementService {
     }
 
     @Transactional
-    public void createSettlement(Long storeId, LocalDate targetDate) {
+    public void createSettlement(Long storeId, Long productId, LocalDate targetDate) {
 
         // 중복 체크
         if (settlementRepository.findByStoreIdAndSettlementDate(storeId, targetDate).isPresent()) {
@@ -103,7 +103,8 @@ public class SettlementService {
                 storeId,
                 com.spicy.backend.order.enums.Status.DELIVERED, // 또는 상황에 맞는 '완료' 상태
                 startOfDay,
-                endOfDay
+                endOfDay,
+                productId
         );
 
         int count = orders.size();
@@ -120,6 +121,7 @@ public class SettlementService {
                 .settlementAmount(settleAmount)
                 .orderCount(count)
                 .status(SettlementStatus.WAITING)
+                .productId(productId)
                 .build();
 
         settlementRepository.save(settlement);
