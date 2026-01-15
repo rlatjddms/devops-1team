@@ -1,5 +1,6 @@
 package com.spicy.backend.settlement.application;
 
+import com.spicy.backend.demandplan.error.DemandPlanErrorCode;
 import com.spicy.backend.global.error.exception.BusinessException;
 import com.spicy.backend.order.dao.order.OrderRepository;
 import com.spicy.backend.order.domain.Order;
@@ -127,7 +128,14 @@ public class SettlementService {
 
     public Integer getOrderCountInTerm(Long productId, int term) {
 
-        LocalDate endDate = LocalDate.now();
+        if(productId == null) {
+            throw new BusinessException(DemandPlanErrorCode.FAILED_TO_FETCH_PRODUCTS);
+        }
+        if(term < 0) {
+            throw new BusinessException(DemandPlanErrorCode.NOT_VALID_TERM);
+        }
+
+        LocalDate  endDate = LocalDate.now();
         LocalDate startDate = endDate.minusDays(term);
 
         return settlementRepository.getTotalQuantity(productId, startDate, endDate);
