@@ -30,16 +30,16 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     List<InventoryLotResponse> findAllProduct();
 
     @Query("""
-                select new com.spicy.backend.inventory.dto.response.ProductBaseInfo(
-                    i.productId,
-                    i.productName,
-                    i.price,
-                    COALESCE(m.minimumQuantity, 0)
-                )
-                from Inventory i
-                left join MinimumProduct m on i.productId = m.productId
-                group by i.productId, i.productName, i.price, m.minimumQuantity
-            """)
+                    select new com.spicy.backend.inventory.dto.response.ProductBaseInfo(
+                        i.productId,
+                        i.productName,
+                        i.price,
+                m.minimumQuantity
+                    )
+                    from Inventory i
+            join MinimumProduct m on i.productId = m.productId
+                    group by i.productId, i.productName, i.price, m.minimumQuantity
+                """)
     List<ProductBaseInfo> findAllProductBaseInfo();
 
     List<Inventory> findByProductId(Long id);
