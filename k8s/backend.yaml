@@ -16,6 +16,11 @@ spec:
       - name: backend
         image: tjddms/spicy-backend:1.0
         imagePullPolicy: IfNotPresent
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
         ports:
         - containerPort: 8000
         env:
