@@ -53,8 +53,8 @@ spec:
               key: JWT_REFRESH_EXPIRATION
         - name: SPICY_ADMIN_KEY
           valueFrom:
-            configMapKeyRef:
-              name: spicy-config
+            secretKeyRef:
+              name: spicy-secret
               key: ADMIN_KEY
 ---
 apiVersion: v1
