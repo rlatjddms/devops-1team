@@ -49,9 +49,9 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderResponse> getAllOrders(Long storeId, Status status) {
+    public List<OrderResponse> getAllOrders(Long userId, Long storeId, Status status) {
         // status에 따라 주문 리스트 조회
-        List<Order> orders = orderRepository.findAllByStoreIdAndStatusAndDeletedAtIsNullOrderByCreatedAtDesc(storeId, status);
+        List<Order> orders = orderRepository.findAllByUserIdAndStoreIdAndStatusAndDeletedAtIsNullOrderByCreatedAtDesc(userId, storeId, status);
 
         // 리스트 반환
         return OrderResponse.from(orders);

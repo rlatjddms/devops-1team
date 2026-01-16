@@ -40,6 +40,10 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     private Long storeId;
 
+    // fk: 주문 생성자 userId
+    @Column(nullable = false)
+    private Long userId;
+
     // 총 주문 금액
     @Column(nullable = false)
     private BigDecimal totalAmount;

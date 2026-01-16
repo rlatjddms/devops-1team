@@ -11,6 +11,8 @@ import com.spicy.backend.order.enums.Status;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,11 +42,15 @@ public class OrderController {
 
     // 주문 조회
     @Operation(summary = "주문 조회", description = "가맹점주의 요청에 따라 전체, 완료, 취소된 주문 조회")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{status}/{store-id}")
     public ResponseEntity<ApiResponse<List<OrderResponse>>> getOrders(
             @PathVariable("store-id") Long storeId, // 가맹점 식별 번호
-            @PathVariable Status status) {
-        return ResponseEntity.ok(ApiResponse.success(orderService.getAllOrders(storeId, status)));
+            @PathVariable Status status,
+            Authentication authentication) {
+        Long userId = (Long) authentication.getPrincipal();
+
+        return ResponseEntity.ok(ApiResponse.success(orderService.getAllOrders(userId, storeId, status)));
     }
 
     // 주문 상세 조회
