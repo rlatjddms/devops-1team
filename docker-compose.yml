@@ -5,7 +5,7 @@ services:
     build: ./backend
     # 컨테이너 이름을 'backend'로 설정
     container_name: backend
-    # 호스트의 8080포트를 컨테이너의 8080포트로 매핑
+    # 호스트의 12345포트를 컨테이너의 8080포트로 매핑
     ports:
       - "12345:8000"
     # 동일 네트워크에 연결하여 DNS로 통신 가능
@@ -17,7 +17,7 @@ services:
     build: ./frontend
     # 컨테이너 이름을 'frontend'로 설정
     container_name: frontend
-    # 호스트의 5173포트를 컨테이너의 5173포트로 매핑
+    # 호스트의 5174포트를 컨테이너의 5173포트로 매핑
     ports:
       - "5174:5173"
     # 동일 네트워크에 연결하여 DNS로 통신 가능
