@@ -71,11 +71,14 @@ public class OrderController {
 
     // 주문 취소
     @Operation(summary = "주문 취소", description = "가맹점주가 생성했던 주문 중 요청받은 건들에 대해 취소를 진행")
+    @PreAuthorize("isAuthenticated()")
     @PatchMapping("/{store-id}/{order-id}")
     public ResponseEntity<ApiResponse<OrderCanceledResponse>> cancelOrders(
+            Authentication authentication,
             @PathVariable("store-id") Long storeId, // 가맹점 식별 번호
             @PathVariable("order-id") Long orderId) {
+        Long userId = (Long) authentication.getPrincipal();
 
-        return ResponseEntity.ok(ApiResponse.success(orderService.cancelOrder(storeId, orderId)));
+        return ResponseEntity.ok(ApiResponse.success(orderService.cancelOrder(userId, storeId, orderId)));
     }
 }

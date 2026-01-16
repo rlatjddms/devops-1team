@@ -27,4 +27,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     );
 
     List<Order> findAllByUserIdAndStoreIdAndStatusAndDeletedAtIsNullOrderByCreatedAtDesc(Long userId, Long storeId, Status status);
+
+    Optional<Order> findByUserIdAndStoreIdAndIdAndDeletedAtIsNull(Long userId, Long storeId, Long orderId);
 }

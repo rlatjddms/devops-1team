@@ -69,11 +69,11 @@ public class OrderService {
     }
 
     @Transactional(rollbackFor = BusinessException.class)
-    public OrderCanceledResponse cancelOrder(Long storeId, Long orderId) {
+    public OrderCanceledResponse cancelOrder(Long userId, Long storeId, Long orderId) {
         // 사용자 검증
-        Order order = orderRepository.findByStoreIdAndIdAndDeletedAtIsNull(storeId, orderId)
+        Order order = orderRepository.findByUserIdAndStoreIdAndIdAndDeletedAtIsNull(userId, storeId, orderId)
                 .orElseThrow(() -> new BusinessException(OrderErrorCode.ORDER_NOT_FOUND));
-        List<OrderItem> items = orderItemRepository.findAllByUserIdAndStoreIdAndOrderIdAndDeletedAtIsNullOrderByCreatedAtDesc(storeId, orderId);
+        List<OrderItem> items = orderItemRepository.findAllByUserIdAndStoreIdAndOrderIdAndDeletedAtIsNullOrderByCreatedAtDesc(userId, storeId, orderId);
 
         // 주문과 주문 상품의 상태를 취소로 변경
         order.updateStatus(Status.CANCELLED);

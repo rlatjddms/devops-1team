@@ -223,7 +223,7 @@ class OrderServiceTests {
                 given(orderItemRepository.findAllByUserIdAndStoreIdAndOrderIdAndDeletedAtIsNullOrderByCreatedAtDesc(userId, storeId, orderId)).willReturn(List.of(orderItem));
 
                 // when
-                OrderCanceledResponse response = orderService.cancelOrder(storeId, orderId);
+                OrderCanceledResponse response = orderService.cancelOrder(userId, storeId, orderId);
 
                 // then
                 assertEquals(Status.CANCELLED, response.order().status());
@@ -240,7 +240,7 @@ class OrderServiceTests {
 
                 // then & when
                 BusinessException exception = assertThrows(BusinessException.class,
-                                () -> orderService.cancelOrder(storeId, orderId));
+                                () -> orderService.cancelOrder(userId, storeId, orderId));
                 assertEquals(OrderErrorCode.ORDER_NOT_FOUND, exception.getErrorCode());
         }
 }
