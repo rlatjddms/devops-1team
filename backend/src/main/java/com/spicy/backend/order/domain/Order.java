@@ -80,8 +80,9 @@ public class Order extends BaseEntity {
         this.totalAmount = totalPrice;
     }
 
-    public static Order create(OrderCreateRequest request, Long storeId) {
+    public static Order create(Long userId, OrderCreateRequest request, Long storeId) {
         return Order.builder()
+                .userId(userId)
                 .storeId(storeId)
                 .deliveryDate(request.deliveryDate())
                 .address(request.address())

@@ -37,7 +37,7 @@ public class OrderService {
         if (cartList.isEmpty()) throw new BusinessException(CartItemErrorCode.CART_ITEM_NOT_FOUND);
 
         // Order 생성 및 저장
-        Order order = orderRepository.save(Order.create(request, storeId));
+        Order order = orderRepository.save(Order.create(userId, request, storeId));
 
         // OrderItem 생성 및 저장
         createAndSaveOrderItems(cartList, order);

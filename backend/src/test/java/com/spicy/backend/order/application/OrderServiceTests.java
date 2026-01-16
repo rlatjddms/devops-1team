@@ -188,7 +188,8 @@ class OrderServiceTests {
         @DisplayName("주문 정보 상세 조회 - 성공")
         void getOrderDetails_Success() {
                 // given
-                given(orderItemRepository.findAllByUserIdAndStoreIdAndOrderIdAndDeletedAtIsNullOrderByCreatedAtDesc(userId, storeId, orderId)).willReturn(List.of(orderItem));
+                given(orderItemRepository.findAllByUserIdAndStoreIdAndOrderIdAndDeletedAtIsNullOrderByCreatedAtDesc(
+                                userId, storeId, orderId)).willReturn(List.of(orderItem));
 
                 // when
                 List<OrderItemResponse> response = orderService.getOrderDetails(userId, storeId, orderId);
@@ -204,7 +205,8 @@ class OrderServiceTests {
         @DisplayName("주문 정보 상세 조회 - 실패 - ORDER_ITEM_NOT_FOUND")
         void getOrderDetails_Failure_ORDER_ITEM_NOT_FOUND() {
                 // given
-                given(orderItemRepository.findAllByUserIdAndStoreIdAndOrderIdAndDeletedAtIsNullOrderByCreatedAtDesc(userId, storeId, orderId)).willReturn(List.of());
+                given(orderItemRepository.findAllByUserIdAndStoreIdAndOrderIdAndDeletedAtIsNullOrderByCreatedAtDesc(
+                                userId, storeId, orderId)).willReturn(List.of());
 
                 // when & then
                 BusinessException exception = assertThrows(BusinessException.class,
@@ -220,7 +222,8 @@ class OrderServiceTests {
                 given(orderRepository.findByStoreIdAndIdAndDeletedAtIsNull(storeId, orderId))
                                 .willReturn(Optional.of(order));
 
-                given(orderItemRepository.findAllByUserIdAndStoreIdAndOrderIdAndDeletedAtIsNullOrderByCreatedAtDesc(userId, storeId, orderId)).willReturn(List.of(orderItem));
+                given(orderItemRepository.findAllByUserIdAndStoreIdAndOrderIdAndDeletedAtIsNullOrderByCreatedAtDesc(
+                                userId, storeId, orderId)).willReturn(List.of(orderItem));
 
                 // when
                 OrderCanceledResponse response = orderService.cancelOrder(userId, storeId, orderId);

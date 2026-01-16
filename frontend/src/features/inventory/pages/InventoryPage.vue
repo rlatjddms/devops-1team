@@ -140,7 +140,8 @@ onMounted(loadProducts);
           :products="products" 
           :loading="loading"
           @view-detail="openDetail"
-          @request-inbound="goToProductOrder"
+          @request-order="goToProductOrder"
+          @request-inbound="openInboundRequest"
           @request-outbound="openOutboundRequest"
           @search="handleSearch"
         />
