@@ -58,10 +58,10 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderItemResponse> getOrderDetails(Long storeId, Long orderId) {
-        // storeId, orderId로 OrderItem 리스트 조회
+    public List<OrderItemResponse> getOrderDetails(Long userId, Long storeId, Long orderId) {
+        // userId, storeId, orderId로 OrderItem 리스트 조회
         // 리스트 길이가 0일 때 예외 발생
-        List<OrderItem> itemList = orderItemRepository.findAllByStoreIdAndOrderIdAndDeletedAtIsNullOrderByCreatedAtDesc(storeId, orderId);
+        List<OrderItem> itemList = orderItemRepository.findAllByUserIdAndStoreIdAndOrderIdAndDeletedAtIsNullOrderByCreatedAtDesc(userId, storeId, orderId);
         if (itemList.isEmpty()) throw new BusinessException(OrderErrorCode.ORDER_ITEM_NOT_FOUND);
 
         // OrderItem 리스트를 OrderItemResponse 리스트로 변환 후 반환
@@ -73,7 +73,7 @@ public class OrderService {
         // 사용자 검증
         Order order = orderRepository.findByStoreIdAndIdAndDeletedAtIsNull(storeId, orderId)
                 .orElseThrow(() -> new BusinessException(OrderErrorCode.ORDER_NOT_FOUND));
-        List<OrderItem> items = orderItemRepository.findAllByStoreIdAndOrderIdAndDeletedAtIsNullOrderByCreatedAtDesc(storeId, orderId);
+        List<OrderItem> items = orderItemRepository.findAllByUserIdAndStoreIdAndOrderIdAndDeletedAtIsNullOrderByCreatedAtDesc(storeId, orderId);
 
         // 주문과 주문 상품의 상태를 취소로 변경
         order.updateStatus(Status.CANCELLED);
