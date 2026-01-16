@@ -33,8 +33,7 @@ public class CartItemController {
     public ResponseEntity<ApiResponse<List<Long>>> addCartItem(
             Authentication authentication,
             @PathVariable("store-id") Long storeId,
-            @RequestBody List<CartItemCreateRequest> request
-    ) {
+            @RequestBody List<CartItemCreateRequest> request) {
         Long userId = (Long) authentication.getPrincipal();
 
         return ResponseEntity.ok(ApiResponse.success(cartItemService.addCartItem(userId, storeId, request)));
@@ -46,8 +45,7 @@ public class CartItemController {
     @GetMapping("/{store-id}")
     public ResponseEntity<ApiResponse<List<CartItemResponse>>> getCartItems(
             Authentication authentication,
-            @PathVariable("store-id") Long storeId
-    ) {
+            @PathVariable("store-id") Long storeId) {
         Long userId = (Long) authentication.getPrincipal();
 
         return ResponseEntity.ok(ApiResponse.success(cartItemService.getCartItems(userId, storeId)));
@@ -56,12 +54,11 @@ public class CartItemController {
     // 장바구니에서 상품 삭제
     @Operation(summary = "장바구니 상품 삭제", description = "장바구니에서 선택한 상품들 삭제")
     @PreAuthorize("isAuthenticated()")
-    @DeleteMapping("/{user-id}/{store-id}/{cart-item-id}")
+    @DeleteMapping("/{store-id}/{cart-item-id}")
     public ResponseEntity<ApiResponse<String>> deleteCartItems(
             Authentication authentication,
             @PathVariable("cart-item-id") Long cartItemId,
-            @PathVariable("store-id") Long storeId
-    ) {
+            @PathVariable("store-id") Long storeId) {
         Long userId = (Long) authentication.getPrincipal();
 
         cartItemService.deleteCartItem(userId, cartItemId, storeId);
