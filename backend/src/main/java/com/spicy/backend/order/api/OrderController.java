@@ -32,11 +32,14 @@ public class OrderController {
 
     // 주문 생성
     @Operation(summary = "주문 생성", description = "가맹점주로부터 데이터를 전달받아 주문 생성")
-    @PostMapping("/{user-id}/{store-id}")
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{store-id}")
     public ResponseEntity<ApiResponse<OrderCreateResponse>> createOrder(
-            @PathVariable("user-id") Long userId,
+            Authentication authentication,
             @PathVariable("store-id") Long storeId, // 가맹점 식별 번호
             @RequestBody OrderCreateRequest request) {
+        Long userId = (Long) authentication.getPrincipal();
+
         return ResponseEntity.ok(ApiResponse.success(orderService.createOrder(storeId, userId, request)));
     }
 
