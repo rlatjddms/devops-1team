@@ -12,6 +12,9 @@ spec:
       labels:
         app: backend
     spec:
+      volumes:
+        - name: tmp
+          emptyDir: { }
       containers:
       - name: backend
         image: tjddms/spicy-backend:1.0
@@ -21,6 +24,9 @@ spec:
           runAsUser: 1000
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
+        volumeMounts:
+          - name: tmp
+            mountPath: /tmp
         ports:
         - containerPort: 8000
         env:
