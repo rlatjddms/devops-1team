@@ -1,6 +1,8 @@
 HELP.md
 .gradle
 build/
+backend/gradle/caches/
+backend/gradle/wrapper/dists/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
