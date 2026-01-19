@@ -5,7 +5,7 @@ gradle/caches/
 gradle/wrapper/dists/
 gradle/daemon/
 gradle/.tmp/
-gradle/native
+gradle/native/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
